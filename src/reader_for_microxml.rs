@@ -46,8 +46,6 @@ pub enum Event<'a> {
     EndElement(&'a str),
     /// Attribute
     Attribute(&'a str, &'a str),
-    ///TODO: when there is nothing to return
-    Nothing,
     /// Child Text between `StartElement` and `EndElement`.
     Text(&'a str),
     /// Error when reading
@@ -86,12 +84,12 @@ impl<'a> ReaderForMicroXml<'_> {
         match &self.tagstate {
             TagState::OutsideOfTag => {
                 //println!("OutsideOfTag {}", "");
-                let (pos, ch) = self.skip_whitespace_and_peek();
+                let (_pos, ch) = self.skip_whitespace_and_peek();
                 //start of tag < xxx >
                 if ch == '<' {
                     self.tagstate = TagState::InsideOfTag;
                     self.movenext();
-                    let (pos, ch) = self.skip_whitespace_and_peek();
+                    let (_pos, ch) = self.skip_whitespace_and_peek();
                     //not comment or autoclose
                     if !(ch == '!' || ch == '/') {
                         self.parse_element_name()
@@ -109,7 +107,7 @@ impl<'a> ReaderForMicroXml<'_> {
             TagState::InsideOfTag => {
                 //println!("InsideOfTag {}", "");
                 //attributes can be InsideOfTag or /> for self ending element or > for startelement
-                let (pos, ch) = self.skip_whitespace_and_peek();
+                let (_pos, ch) = self.skip_whitespace_and_peek();
                 //println!("ch {}", ch);
                 if !(ch == '/' || ch == '>') {
                     //attribute
@@ -117,7 +115,7 @@ impl<'a> ReaderForMicroXml<'_> {
                 } else if ch == '/' {
                     //self-ending element
                     self.movenext();
-                    let (pos, ch) = self.skip_whitespace_and_peek();
+                    let (_pos, ch) = self.skip_whitespace_and_peek();
                     if ch != '>' {
                         Event::Error("Tag has / but not />".to_owned())
                     } else {
@@ -141,9 +139,9 @@ impl<'a> ReaderForMicroXml<'_> {
         //we are already at the / char
         self.movenext();
         //read until space, / or >
-        let (pos, ch) = self.skip_whitespace_and_peek();
+        let (pos, _ch) = self.skip_whitespace_and_peek();
         let start_pos = pos;
-        let mut end_pos = pos;
+        let end_pos;
         //println!("start_pos {}", &start_pos);
         loop {
             let (pos, ch) = self.peek();
@@ -155,7 +153,7 @@ impl<'a> ReaderForMicroXml<'_> {
                 self.movenext();
             }
         }
-        let (pos, ch) = self.skip_whitespace_and_peek();
+        let (_pos, ch) = self.skip_whitespace_and_peek();
         if ch == '>' {
             self.movenext();
             self.tagstate = TagState::OutsideOfTag;
@@ -167,9 +165,9 @@ impl<'a> ReaderForMicroXml<'_> {
     //parse text, trim before and after
     fn parse_text(&mut self) -> Event {
         //text element
-        let (pos, ch) = self.peek();
+        let (pos, _ch) = self.peek();
         let start_pos = pos;
-        let mut end_pos = pos;
+        let mut end_pos;
         //println!("text start_pos {}", &start_pos);
         loop {
             let (pos, ch) = self.peek();
@@ -226,9 +224,9 @@ impl<'a> ReaderForMicroXml<'_> {
     fn parse_element_name(&mut self) -> Event {
         //start of tag name < xxx >
         //read until space, / or >
-        let (pos, ch) = self.skip_whitespace_and_peek();
+        let (pos, _ch) = self.skip_whitespace_and_peek();
         let start_pos = pos;
-        let mut end_pos = pos;
+        let end_pos;
         //println!("start_pos {}", &start_pos);
         loop {
             let (pos, ch) = self.peek();
@@ -246,9 +244,9 @@ impl<'a> ReaderForMicroXml<'_> {
         return Event::StartElement(self.input.get(start_pos..end_pos).unwrap());
     }
     fn parse_attribute(&mut self) -> Event {
-        let (pos, ch) = self.skip_whitespace_and_peek();
+        let (pos, _ch) = self.skip_whitespace_and_peek();
         let start_pos = pos;
-        let mut end_pos = pos;
+        let end_pos;
         //println!("attr name start_pos {}", &start_pos);
         loop {
             let (pos, ch) = self.peek();
@@ -262,20 +260,20 @@ impl<'a> ReaderForMicroXml<'_> {
         }
         let attr_name = self.input.get(start_pos..end_pos).unwrap();
         //region: skip delimiter
-        let (pos, ch) = self.skip_whitespace_and_peek();
+        let (_pos, ch) = self.skip_whitespace_and_peek();
         if ch == '=' {
             self.movenext();
         }
-        let (pos, ch) = self.skip_whitespace_and_peek();
+        let (_pos, ch) = self.skip_whitespace_and_peek();
         if ch == '"' {
             self.movenext();
         } else {
             return Event::Error("Attribute does not have = .".to_owned());
         }
         //end region
-        let (pos, ch) = self.peek();
+        let (pos, _ch) = self.peek();
         let start_pos = pos;
-        let mut end_pos = pos;
+        let end_pos;
         //println!("attr value start_pos {}", &start_pos);
         loop {
             let (pos, ch) = self.peek();
@@ -313,6 +311,7 @@ impl<'a> ReaderForMicroXml<'_> {
 
     //moves the iterator, I dont need the value here to keep logic simple.
     fn movenext(&mut self) {
+        //TODO: what to do if eof ?
         self.last_char = self.indices.next().unwrap();
     }
 

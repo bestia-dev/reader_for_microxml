@@ -7,7 +7,10 @@ use std::io::Read;
 use std::process;
 
 fn main() {
-    println!("start main(){}-----------------------------------------------------------------------","");
+    println!(
+        "start main(){}-----------------------------------------------------------------------",
+        ""
+    );
     let args: Vec<_> = env::args().collect();
 
     if args.len() != 2 {
@@ -36,9 +39,6 @@ pub fn test_my_microxml(input: &str) {
             }
             Event::Attribute(name, value) => {
                 println!("Attribute(name, value) .{}. .{}.", name, value);
-            }
-            Event::Nothing => {
-                println!("Nothing .{}.", "");
             }
             Event::Text(txt) => {
                 println!("Text(txt) .{}.", txt);
