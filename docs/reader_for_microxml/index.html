@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `reader_for_microxml` crate."><meta name="keywords" content="rust, rustlang, rust-lang, reader_for_microxml"><title>reader_for_microxml - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="shortcut icon" href="../favicon.ico"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../reader_for_microxml/index.html'><div class='logo-container'><img src='../rust-logo.png' alt='logo'></div></a><p class='location'>Crate reader_for_microxml</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all reader_for_microxml's items</p></a><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'reader_for_microxml', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/reader_for_microxml/lib.rs.html#2-421' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>reader_for_microxml</a></span></h1><div class='docblock'><h1 id="reader-for-microxml" class="section-header"><a href="#reader-for-microxml">reader for microXml</a></h1>
+<p><em>Things are changing fast. 2020-01-13 LucianoBestia ver.1.0.0.</em></p>
+<p>There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates.<br />
+I found the existance of a standard (or W3C proposal) for <em>MicroXml</em> - dramatically simpler then the full Xml standard. Perfect for my use-case: I have small simple html files, that are microXml compatible.</p>
+<h2 id="microxml" class="section-header"><a href="#microxml">microXml</a></h2>
+<p>MicroXML is a subset of XML. It is dramatically simpler.<br />
+https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/<br />
+https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html<br />
+MicroXML is actualy well-formed Xml.<br />
+In the data model of MicroXml there are no comments, CData, namespaces, declarations, processing instructions,...<br />
+An example of all can be done in a well-formed microXml:</p>
+<pre><code class="language-xml">&lt;memo lang=&quot;en&quot; date=&quot;2017-05-01&quot;&gt;
+    I &lt;em&gt;love&lt;/em&gt; &amp;#xB5;
+    &lt;!-- MICRO SIGN --&gt;XML!&lt;br /&gt;
+    It's so clean &amp;amp; simple.&lt;/memo&gt;
+</code></pre>
+<p>MicroXml can be only in utf-8. I am lucky, because Rust Strings are internally utf-8 and are automatically checked for correctnes.<br />
+MicroXml should go throught normalization: CR &amp; CRLF should be converted to LF, but I don't do that here.<br />
+MicroXml can contain Comments, but they are not microxml data, so I just skip them.<br />
+Whitespaces are completely preserved in Text Nodes. For me they are significant. Also newline and Tabs. This is different from full Xml whitespace processing.<br />
+All other whitespaces are ignored - they are insignificant.</p>
+<h2 id="reader" class="section-header"><a href="#reader">reader</a></h2>
+<p>This ReaderForMicroXml obviously cannot read a complicated full XML.<br />
+This reader_for_microxml is used for small html fragments.<br />
+They must be well-formed microXml.<br />
+This fragments are meant for a html templating for dodrio.<br />
+Because of the small size of fragments, I can put all the text in memory in a string.<br />
+Only basic mal-formed incorrectness produce errors. I am not trying to return errors for all the possible mal-formed incorrectness in microXml.<br />
+The speed is not really important, but the size of the code is, because it will be used in WebAssembly. Every code is too big for Wasm!<br />
+The crate has NO dependencies, NO allocations.<br />
+Probably it could be also <code>#![no_std]</code>, but I don't need that.</p>
+<h2 id="references" class="section-header"><a href="#references">References</a></h2>
+<p><a href="https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html">https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html</a><br />
+<a href="https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/">https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/</a><br />
+<a href="https://github.com/tafia/quick-xml">https://github.com/tafia/quick-xml</a><br />
+<a href="https://github.com/RazrFalcon/roxmltree">https://github.com/RazrFalcon/roxmltree</a></p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table><tr class='module-item'><td><a class="struct" href="struct.ReaderForMicroXml.html" title='reader_for_microxml::ReaderForMicroXml struct'>ReaderForMicroXml</a></td><td class='docblock-short'><p>struct Reader for MicroXml - the Class
+Rust has Structs + Traits, but for me it is just like Class/Object.
+Just without inheritance.
+All the fields are internal and not public.
+The only way to interact is throu methods.</p>
+</td></tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table><tr class='module-item'><td><a class="enum" href="enum.Event.html" title='reader_for_microxml::Event enum'>Event</a></td><td class='docblock-short'><p>The reader_for_microxml returns events.
+The caller will manage this events.
+So they must be public.
+The string slices are reference to the original string with microxml text</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.TagState.html" title='reader_for_microxml::TagState enum'>TagState</a></td><td class='docblock-short'><p>internal enum: Tags are strings inside delimiters &lt; and &gt;  like <div> or </div></p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../";window.currentCrate = "reader_for_microxml";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>
