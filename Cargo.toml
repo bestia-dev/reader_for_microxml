@@ -3,12 +3,15 @@ name = "reader_for_microxml"
 version = "1.0.0"
 authors = ["Luciano Bestia <luciano.bestia@gmail.com>"]
 edition = "2018"
-description="reads microXml"
+description="reader for microXml"
 repository = "https://github.com/LucianoBestia/reader_for_microxml"
 readme = "README.md"
 license = "MIT"
 keywords = ["rust", "xml", "microxml"]
-categories = ["parser","lexer"]
-
+categories = ["parser","lexer", "xml"]
 
 [dependencies]
+
+
+[badges]
+maintenance = { status = "passively-maintained" }
