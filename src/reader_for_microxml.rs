@@ -4,14 +4,14 @@
 //! *Things are changing fast. 2020-01-13 LucianoBestia ver.1.0.0.*  
 //! 
 //! There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates.  
-//! I found the existance of a standard (or W3C proposal) for *MicroXml* - dramatically simpler then the full Xml standard. Perfect for my use-case: I have small simple html files, that are microXml compatible.  
+//! I found the existence of a standard (or W3C proposal) for *MicroXml* - dramatically simpler then the full Xml standard. Perfect for my use-case: I have small simple html files, that are microXml compatible.  
 //! 
 //! ## microXml
 //! 
 //! MicroXML is a subset of XML. It is dramatically simpler.  
-//! https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/  
-//! https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html  
-//! MicroXML is actualy well-formed Xml.  
+//! <https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/>  
+//! <https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html>  
+//! MicroXML is actually well-formed Xml.  
 //! In the data model of MicroXml there are no comments, CData, namespaces, declarations, processing instructions,...  
 //! An example of all can be done in a well-formed microXml:  
 //! 
@@ -20,11 +20,11 @@
 //!     I <em>love</em> &#xB5;
 //!     <!-- MICRO SIGN -->XML!<br />
 //!     It's so clean &amp; simple.</memo>
-//! ```  
+//! ```
 //! 
-//! MicroXml can be only in utf-8. I am lucky, because Rust Strings are internally utf-8 and are automatically checked for correctnes.  
-//! MicroXml should go throught normalization: CR & CRLF should be converted to LF, but I don't do that here.  
-//! MicroXml can contain Comments, but they are not microxml data, so I just skip them.  
+//! MicroXml can be only in utf-8. I am lucky, because Rust Strings are internally utf-8 and are automatically checked for correctness.  
+//! MicroXml should go through normalization: CR & CRLF should be converted to LF, but I don't do that here.  
+//! MicroXml can contain Comments, but they are not microXml data, so I just skip them.  
 //! Whitespaces are completely preserved in Text Nodes. For me they are significant. Also newline and Tabs. This is different from full Xml whitespace processing.  
 //! All other whitespaces are ignored - they are insignificant.  
 //! 
@@ -51,11 +51,11 @@
 
 //endregion: lmake_readme insert "readme.md"
 
-/// struct Reader for MicroXml - the Class
-/// Rust has Structs + Traits, but for me it is just like Class/Object.
-/// Just without inheritance.
-/// All the fields are internal and not public.
-/// The only way to interact is throu methods.
+/// struct Reader for MicroXml - the Class  
+/// Rust has Structs + Traits, but for me it is just like Class/Object.  
+/// Just without inheritance.  
+/// All the fields are internal and not public.  
+/// The only way to interact is through methods.  
 pub struct ReaderForMicroXml<'a> {
     /// reference to the xml string (no allocation)
     input: &'a str,
@@ -63,45 +63,47 @@ pub struct ReaderForMicroXml<'a> {
     indices: core::str::CharIndices<'a>,
     /// I need to know the TagState for programming as a state machine
     tag_state: TagState,
-    // the last read character from the iterator
+    /// the last read character from the iterator
     last_char: (usize, char),
 }
 
-/// The reader_for_microxml returns events.
-/// The caller will manage this events.
-/// So they must be public.
-/// The string slices are reference to the original string with microxml text
+/// The reader_for_microxml returns events.  
+/// The caller will manage this events. So they must be public.  
+/// The string slices are reference to the original string with microXml text  
 #[derive(Clone, Debug)]
 pub enum Event<'a> {
-    /// Start of xml element
+    /// Start of xml element  
     StartElement(&'a str),
-    /// End of xml element
+    /// End of xml element  
     EndElement(&'a str),
-    /// Attribute
+    /// Attribute  
     Attribute(&'a str, &'a str),
-    /// Child Text between `StartElement` and `EndElement`.
+    /// Child Text between `StartElement` and `EndElement`.  
     TextNode(&'a str),
-    /// Error when reading
+    /// Error when reading  
     Error(&'static str),
-    /// End of XML document.
+    /// End of microXml document  
     Eof,
 }
 
-/// internal enum: Tags are strings inside delimiters < and >  like <div> or </div>
+/// internal enum: Tags are strings inside delimiters `< and >  like <div> or </div>`  
 enum TagState {
+    /// outside of tag  
     OutsideOfTag,
+    /// inside of tag  
     InsideOfTag,
+    /// end of file  
     Eof,
 }
 
 impl<'a> ReaderForMicroXml<'_> {
-    /// Constructor. String is immutably borrowed here. No allocation.
+    /// Constructor. String is immutably borrowed here. No allocation.  
     pub fn new(input: &str) -> ReaderForMicroXml {
         // CharIndices is an iterator that returns a tuple: (pos, ch).
         // The "byte" position for using the string slice and the character.
         // This is a complication because one utf-8 character can have more bytes.
         // And the slices are defined by "bytes position", not by "character position".
-        // Very important distincton!
+        // Very important distinction!
 
         let mut indices = input.char_indices();
         let mut last_char = (0, ' ');
@@ -117,8 +119,8 @@ impl<'a> ReaderForMicroXml<'_> {
         }
     }
 
-    /// Reads the next event: StartElement, Attribute, Text, EndElement
-    /// If the Option None (Eof) has propagated till here, this is an Error.
+    /// Reads the next event: StartElement, Attribute, Text, EndElement  
+    /// If the Option None (Eof) has propagated till here, this is an Error.  
     pub fn read_event(&mut self) -> Event {
         match self.read_event_internal() {
             Some(x) => x,
@@ -126,9 +128,9 @@ impl<'a> ReaderForMicroXml<'_> {
         }
     }
 
-    /// Reads the next event (internal).
-    /// The internal function can understand when the Eof is in a correct position
-    /// and stops the propagation of Option None.
+    /// Reads the next event (internal).  
+    /// The internal function can understand when the Eof is in a correct position  
+    /// and stops the propagation of Option None.  
     #[allow(clippy::integer_arithmetic, clippy::nonminimal_bool)]
     fn read_event_internal(&mut self) -> Option<Event> {
         match &self.tag_state {
@@ -199,8 +201,8 @@ impl<'a> ReaderForMicroXml<'_> {
         }
     }
 
-    /// Reads the element name
-    /// Propagation of Option None if is Eof
+    /// Reads the element name  
+    /// Propagation of Option None if is Eof  
     fn read_element_name(&mut self) -> Option<Event> {
         // start of tag name < xxx >
         let (pos, _ch) = self.skip_whitespace_and_get_last_char()?;
@@ -225,8 +227,8 @@ impl<'a> ReaderForMicroXml<'_> {
         ));
     }
 
-    /// Reads the attribute name and value.
-    /// Return Option None if Eof.
+    /// Reads the attribute name and value.  
+    /// Return Option None if Eof.  
     fn read_attribute(&mut self) -> Option<Event> {
         let (pos, _ch) = self.skip_whitespace_and_get_last_char()?;
         let start_pos = pos;
@@ -278,7 +280,7 @@ impl<'a> ReaderForMicroXml<'_> {
         Some(Event::Attribute(attr_name, attr_value))
     }
 
-    /// reads end element
+    /// reads end element  
     fn read_end_element(&mut self) -> Option<Event> {
         // end tag for element  </ xxx >
         // we are already at the / char
@@ -322,11 +324,11 @@ impl<'a> ReaderForMicroXml<'_> {
         }
     }
 
-    /// Reads text node
-    /// I don't do any encoding/decoding here, because I need it "as is" for html templating.
-    /// I preserve all the "significant" whitespaces because I will use this for templating.
-    /// And because there is no hard standard for trailing spaces in xml text node.
-    /// If reached Eof propagates Option None.
+    /// Reads text node  
+    /// I don't do any encoding/decoding here, because I need it "as is" for html templating.  
+    /// I preserve all the "significant" whitespaces because I will use this for templating.  
+    /// And because there is no hard standard for trailing spaces in xml text node.  
+    /// If reached Eof propagates Option None.  
     fn read_text_node(&mut self, start_pos: usize) -> Option<Event> {
         // text element look like this > some text <
         let (_pos, _ch) = self.get_last_char();
@@ -346,9 +348,9 @@ impl<'a> ReaderForMicroXml<'_> {
         return Some(Event::TextNode(self.input.get(start_pos..end_pos).unwrap()));
     }
 
-    /// Comments are not data for MicroXml standard,
-    /// They are ignored, I dont return them.
-    /// The Option is returned only because of Option None propagation because of Eof.
+    /// Comments are not data for MicroXml standard,  
+    /// They are ignored, I don't return them.  
+    /// The Option is returned only because of Option None propagation because of Eof.  
     fn skip_comment(&mut self) -> Option<usize> {
         // comments looks like this <!-- xxx -->
         // we should be now at the second character  <!
@@ -377,19 +379,19 @@ impl<'a> ReaderForMicroXml<'_> {
     }
 
     // region: methods for iterator
-    // Iterator next() of CharIndices is consuming the char.
-    // There is no way back to the same char.
-    // But often I need to get again the same character of the last operation.
-    // I tried with peekable.peek(), but it gives a reference and this was a problem.
-    // So now I have 2 separate methods: move_next_char() and get_last_char().
-    // And I store the last_char for repeated use.
 
-    /// Moves the iterator and stores the last_char.
-    /// Anytime it can reach the End of File (Eof),
-    /// then it propagates the Option None to the caller with the ? syntax.
-    /// Only the caller knows if the Eof here is ok or it is an unexpected error.
-    /// The usize inside the Option is only a dummy,
-    /// only because I need to propagate the Option None because of Eof
+    /// Moves the iterator and stores the last_char.  
+    /// Iterator next() of CharIndices is consuming the char.  
+    /// There is no way back to the same char.  
+    /// But often I need to get again the same character of the last operation.  
+    /// I tried with peekable.peek(), but it gives a reference and this was a problem.  
+    /// So now I have 2 separate methods: move_next_char() and get_last_char().  
+    /// I store the last_char for repeated use.  
+    /// Anytime it can reach the End of File (Eof),  
+    /// then it propagates the Option None to the caller with the ? syntax.  
+    /// Only the caller knows if the Eof here is ok or it is an unexpected error.  
+    /// The usize inside the Option is only a dummy,  
+    /// only because I need to propagate the Option None because of Eof  
     fn move_next_char(&mut self) -> Option<usize> {
         // Eof can be reached anytime. I will propagate None to the caller with ?
         self.last_char = self.indices.next()?;
@@ -397,16 +399,16 @@ impl<'a> ReaderForMicroXml<'_> {
         Some(0)
     }
 
-    /// Returns the last_char, but doesnt move the iterator.
-    /// Cannot error
+    /// Returns the last_char, but doesn't move the iterator.  
+    /// Cannot error  
     fn get_last_char(&self) -> (usize, char) {
         self.last_char
     }
 
-    /// Skips all whitespaces if there is any
-    /// and returns the last_char when it is not whitespace.
-    /// The caller must know prior to call that the whitespaces are insignificant.
-    /// If found Eof, propagates Option None.
+    /// Skips all whitespaces if there is any  
+    /// and returns the last_char when it is not whitespace.  
+    /// The caller must know prior to call that the whitespaces are insignificant.  
+    /// If found Eof, propagates Option None.  
     fn skip_whitespace_and_get_last_char(&mut self) -> Option<(usize, char)> {
         loop {
             let (pos, ch) = self.get_last_char();

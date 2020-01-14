@@ -19,7 +19,7 @@ An example of all can be done in a well-formed microXml:
     I <em>love</em> &#xB5;
     <!-- MICRO SIGN -->XML!<br />
     It's so clean &amp; simple.</memo>
-```  
+```
 
 MicroXml can be only in utf-8. I am lucky, because Rust Strings are internally utf-8 and are automatically checked for correctness.  
 MicroXml should go through normalization: CR & CRLF should be converted to LF, but I don't do that here.  
