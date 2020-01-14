@@ -8,7 +8,7 @@ repository = "https://github.com/LucianoBestia/reader_for_microxml"
 readme = "README.md"
 license = "MIT"
 keywords = ["rust", "xml", "microxml"]
-categories = ["parser","lexer", "xml"]
+categories = ["parsing"]
 # this exclude is for publish to crates.io
 exclude = [
     "docs/",

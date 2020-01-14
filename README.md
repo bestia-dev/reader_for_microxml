@@ -39,24 +39,15 @@ The speed is not really important, but the size of the code is, because it will 
 The crate has NO dependencies, NO allocations.  
 Probably it could be also `#![no_std]`, but I don't need that.  
 
+## Examples
+
+Find examples how to use it in the repository on github.  
+Go to the /example/ folder.  
+<https://github.com/LucianoBestia/reader_for_microxml>
+
 ## References
 
 <https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html>  
 <https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/>  
 <https://github.com/tafia/quick-xml>  
 <https://github.com/RazrFalcon/roxmltree>  
-
-[comment]: # (lmake_readme remove start)
-
-## Build and Run
-
-Go to the /example/ folder and then to one subfolder.  
-run this:  
-`cargo run t2.html`  
-
-## ChangeLog
-
-2020-01-13 examples  
-2020-01-13 &str instead of String everywhere. No allocation.  
-
-[comment]: # (lmake_readme remove end)
