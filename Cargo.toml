@@ -12,7 +12,7 @@ categories = ["parser","lexer", "xml"]
 # this exclude is for publish to crates.io
 exclude = [
     "docs/",
-    "example/*",
+    "example/",
 ]
 
 [dependencies]
