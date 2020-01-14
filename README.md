@@ -1,11 +1,17 @@
 # reader for microXml
 
-*Things are changing fast. This is the situation on 2020-01-13. LucianoBestia*  
+*Things are changing fast. 2020-01-13 LucianoBestia ver.1.0.0.*  
+
+[comment]: # (lmake_readme version)  
 
 There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates.  
 I found the existance of a standard (or proposal) for *MicroXml* - dramatically simpler then the full Xml standard. Perfect for my use-case. This are small simple html files , that are microXml compatible. The speed is not really important. But the size of the code is, because it will be used in WebAssembly. Everything is too big for Wasm.  
-No dependencies.  
+No dependencies. No allocations (in mod ReaderForMicroXml).  
 
+## Build and Run
+
+example:
+`clear; cargo run t2.html`
 
 ## References
 
