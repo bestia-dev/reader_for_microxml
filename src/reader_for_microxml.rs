@@ -26,7 +26,7 @@ pub struct ReaderForMicroXml<'a> {
     //all the fields are internal and not public
     input: &'a str,
     ///the input string to read, but as iterator CharIndices
-    indices: std::str::CharIndices<'a>,
+    indices: core::str::CharIndices<'a>,
     ///and I need to know the TagState
     tagstate: TagState,
     ///sometimes is needed the last character of previous read
@@ -47,9 +47,9 @@ pub enum Event<'a> {
     /// Attribute
     Attribute(&'a str, &'a str),
     /// Child Text between `StartElement` and `EndElement`.
-    Text(&'a str),
+    TextNode(&'a str),
     /// Error when reading
-    Error(String),
+    Error(&'static str),
     /// Comment is not data for MicroXml
     Comment,
     /// End of XML document.
@@ -60,6 +60,7 @@ pub enum Event<'a> {
 enum TagState {
     OutsideOfTag,
     InsideOfTag,
+    Eof,
 }
 
 impl<'a> ReaderForMicroXml<'_> {
@@ -77,98 +78,127 @@ impl<'a> ReaderForMicroXml<'_> {
             last_char,
         }
     }
+    pub fn read_event(&mut self) -> Event {
+        match self.read_event2() {
+            Some(x) => x,
+            None => Event::Error("Eof on incorrect position"),
+        }
+    }
 
     ///read next event
     #[allow(clippy::integer_arithmetic, clippy::nonminimal_bool)]
-    pub fn read_event(&mut self) -> Event {
+    pub fn read_event2(&mut self) -> Option<Event> {
         match &self.tagstate {
             TagState::OutsideOfTag => {
-                //println!("OutsideOfTag {}", "");
-                let (_pos, ch) = self.skip_whitespace_and_peek();
+                //libc_println!("OutsideOfTag {}", "");
+                let (_pos, ch) = self.skip_whitespace_and_peek()?;
                 //start of tag < xxx >
                 if ch == '<' {
                     self.tagstate = TagState::InsideOfTag;
-                    self.movenext();
-                    let (_pos, ch) = self.skip_whitespace_and_peek();
-                    //not comment or autoclose
+                    self.movenext()?;
+                    let (_pos, ch) = self.skip_whitespace_and_peek()?;
+                    //not comment or auto-close
                     if !(ch == '!' || ch == '/') {
                         self.parse_element_name()
                     } else if ch == '!' {
                         //this is a comment
                         self.parse_comment()
                     } else {
-                        //the closing elemnt </div>
-                        self.parse_closing_element()
+                        //the end element </div>
+                        self.parse_end_element()
                     }
                 } else {
-                    self.parse_text()
+                    self.parse_text_node()
                 }
             }
             TagState::InsideOfTag => {
-                //println!("InsideOfTag {}", "");
-                //attributes can be InsideOfTag or /> for self ending element or > for startelement
-                let (_pos, ch) = self.skip_whitespace_and_peek();
-                //println!("ch {}", ch);
+                //libc_println!("InsideOfTag {}", "");
+                //attributes can be InsideOfTag or /> for self-closing element or > for startelement
+                let (_pos, ch) = self.skip_whitespace_and_peek()?;
+                //libc_println!("before attr {}", ch);
+                //libc_println!("ch {}", ch);
                 if !(ch == '/' || ch == '>') {
                     //attribute
                     self.parse_attribute()
                 } else if ch == '/' {
-                    //self-ending element
-                    self.movenext();
-                    let (_pos, ch) = self.skip_whitespace_and_peek();
+                    //libc_println!("self-closing element {}", ch);
+                    //self-closing element
+                    self.movenext()?; // to >
+                    let (_pos, ch) = self.skip_whitespace_and_peek()?;
+                    //libc_println!("skip_whitespace_and_peek {}", ch);
                     if ch != '>' {
-                        Event::Error("Tag has / but not />".to_owned())
+                        Some(Event::Error("Tag has / but not />"))
                     } else {
-                        self.movenext();
-                        return Event::EndElement("");
+                        self.tagstate = TagState::OutsideOfTag;
+                        self.movenext()?;
+                        return Some(Event::EndElement(""));
                     }
                 } else {
                     //the end of the tag >
-                    self.movenext();
+                    self.movenext()?;
                     self.tagstate = TagState::OutsideOfTag;
                     //recursive calling
-                    return self.read_event();
+                    return Some(self.read_event());
                 }
+            }
+            TagState::Eof => {
+                return Some(Event::Eof);
             }
         }
     }
 
-    ///parse closing element
-    fn parse_closing_element(&mut self) -> Event {
-        //closing tag for element  </ xxx >
+    ///parse end element
+    fn parse_end_element(&mut self) -> Option<Event> {
+        //end tag for element  </ xxx >
         //we are already at the / char
-        self.movenext();
+        self.movenext()?;
         //read until space, / or >
-        let (pos, _ch) = self.skip_whitespace_and_peek();
+        let (pos, _ch) = self.skip_whitespace_and_peek()?;
         let start_pos = pos;
         let end_pos;
-        //println!("start_pos {}", &start_pos);
+        //libc_println!("start_pos {}", &start_pos);
         loop {
             let (pos, ch) = self.peek();
             if ch.is_whitespace() || ch == '>' {
                 end_pos = pos;
-                //println!("end_pos {}", &end_pos);
+                //libc_println!("end_pos {}", &end_pos);
                 break;
             } else {
-                self.movenext();
+                self.movenext()?;
             }
         }
-        let (_pos, ch) = self.skip_whitespace_and_peek();
+        let (_pos, ch) = self.skip_whitespace_and_peek()?;
         if ch == '>' {
-            self.movenext();
-            self.tagstate = TagState::OutsideOfTag;
-            return Event::EndElement(self.input.get(start_pos..end_pos).unwrap());
+            //after the End element is possible to have a correct Eof
+            //everywhere else it is an error
+            match self.movenext() {
+                Some(_x) => match self.skip_whitespace_and_peek() {
+                    Some(_x) => {
+                        self.tagstate = TagState::OutsideOfTag;
+                    }
+                    None => {
+                        self.tagstate = TagState::Eof;
+                    }
+                },
+                None => {
+                    self.tagstate = TagState::Eof;
+                }
+            }
+            return Some(Event::EndElement(
+                self.input.get(start_pos..end_pos).unwrap(),
+            ));
         } else {
-            return Event::Error("End Element is does not have > .".to_owned());
+            return Some(Event::Error("End Element is does not have > ."));
         }
     }
     //parse text, trim before and after
-    fn parse_text(&mut self) -> Event {
+    //I don't do any encoding/decoding here
+    fn parse_text_node(&mut self) -> Option<Event> {
         //text element
         let (pos, _ch) = self.peek();
         let start_pos = pos;
         let mut end_pos;
-        //println!("text start_pos {}", &start_pos);
+        //libc_println!("text start_pos {}", &start_pos);
         loop {
             let (pos, ch) = self.peek();
             if ch == '<' {
@@ -176,32 +206,32 @@ impl<'a> ReaderForMicroXml<'_> {
                 self.tagstate = TagState::OutsideOfTag;
                 break;
             } else {
-                self.movenext();
+                self.movenext()?;
             }
         }
         //trim trailing whitespaces
         let before_trim = self.input.get(start_pos..end_pos).unwrap();
         let mut indic1 = before_trim.char_indices();
-        //println!("end_pos {}", &end_pos);
-        //println!("before_trim.len() {}", before_trim.len());
+        //libc_println!("end_pos {}", &end_pos);
+        //libc_println!("before_trim.len() {}", before_trim.len());
         loop {
             let (pos, ch) = indic1.next_back().unwrap();
-            //println!("pos ch {} {}", &pos, &ch);
+            //libc_println!("pos ch {} {}", &pos, &ch);
             if !ch.is_whitespace() {
                 end_pos = end_pos - (before_trim.len() - 1 - pos);
-                //println!("end_pos {}", &end_pos);
+                //libc_println!("end_pos {}", &end_pos);
                 break;
             }
         }
-        return Event::Text(self.input.get(start_pos..end_pos).unwrap());
+        return Some(Event::TextNode(self.input.get(start_pos..end_pos).unwrap()));
     }
 
     //comments are not data for MicroXml, It is ignored, I dont return this text
-    fn parse_comment(&mut self) -> Event {
+    fn parse_comment(&mut self) -> Option<Event> {
         //comment <!-- xxx -->
         //we should be at the second character now <!
-        self.movenext(); //skip -
-        self.movenext(); //skip -
+        self.movenext()?; //skip -
+        self.movenext()?; //skip -
 
         //read until end of comment -->
         let mut ch1 = ' ';
@@ -209,110 +239,115 @@ impl<'a> ReaderForMicroXml<'_> {
         loop {
             let (_pos, ch3) = self.peek();
             if ch1 == '-' && ch2 == '-' && ch3 == '>' {
-                self.movenext();
+                self.movenext()?;
                 break;
             } else {
                 ch1 = ch2;
                 ch2 = ch3;
-                self.movenext();
+                self.movenext()?;
             }
         }
-        self.skip_whitespace_and_peek();
+        self.skip_whitespace_and_peek()?;
         self.tagstate = TagState::OutsideOfTag;
-        return Event::Comment;
+        return Some(Event::Comment);
     }
-    fn parse_element_name(&mut self) -> Event {
+    fn parse_element_name(&mut self) -> Option<Event> {
         //start of tag name < xxx >
         //read until space, / or >
-        let (pos, _ch) = self.skip_whitespace_and_peek();
+        let (pos, _ch) = self.skip_whitespace_and_peek()?;
         let start_pos = pos;
         let end_pos;
-        //println!("start_pos {}", &start_pos);
+        //libc_println!("start_pos {}", &start_pos);
         loop {
             let (pos, ch) = self.peek();
             if ch.is_whitespace() || ch == '/' || ch == '>' {
                 end_pos = pos;
-                //println!("end_pos {}", &end_pos);
+                //libc_println!("end_pos {}", &end_pos);
                 break;
             } else {
-                self.movenext();
+                self.movenext()?;
             }
         }
-        self.skip_whitespace_and_peek();
+        self.skip_whitespace_and_peek()?;
         self.tagstate = TagState::InsideOfTag;
 
-        return Event::StartElement(self.input.get(start_pos..end_pos).unwrap());
+        return Some(Event::StartElement(
+            self.input.get(start_pos..end_pos).unwrap(),
+        ));
     }
-    fn parse_attribute(&mut self) -> Event {
-        let (pos, _ch) = self.skip_whitespace_and_peek();
+    fn parse_attribute(&mut self) -> Option<Event> {
+        let (pos, _ch) = self.skip_whitespace_and_peek()?;
         let start_pos = pos;
         let end_pos;
-        //println!("attr name start_pos {}", &start_pos);
+        //libc_println!("attr name start_pos {}", &start_pos);
         loop {
             let (pos, ch) = self.peek();
             if ch.is_whitespace() || ch == '=' {
                 end_pos = pos;
-                //println!("attr name end_pos {}", &end_pos);
+                //libc_println!("attr name end_pos {}", &end_pos);
                 break;
             } else {
-                self.movenext();
+                self.movenext()?;
             }
         }
         let attr_name = self.input.get(start_pos..end_pos).unwrap();
         //region: skip delimiter
-        let (_pos, ch) = self.skip_whitespace_and_peek();
+        let (_pos, ch) = self.skip_whitespace_and_peek()?;
         if ch == '=' {
-            self.movenext();
+            self.movenext()?;
         }
-        let (_pos, ch) = self.skip_whitespace_and_peek();
+        let (_pos, ch) = self.skip_whitespace_and_peek()?;
         if ch == '"' {
-            self.movenext();
+            self.movenext()?;
         } else {
-            return Event::Error("Attribute does not have = .".to_owned());
+            return Some(Event::Error("Attribute does not have = ."));
         }
         //end region
         let (pos, _ch) = self.peek();
         let start_pos = pos;
         let end_pos;
-        //println!("attr value start_pos {}", &start_pos);
+        //libc_println!("attr value start_pos {}", &start_pos);
         loop {
             let (pos, ch) = self.peek();
             if ch == '"' {
                 end_pos = pos;
-                //println!("attr value end_pos {}", &end_pos);
-                self.movenext();
+                //libc_println!("attr value end_pos {}", &end_pos);
+                self.movenext()?;
                 break;
             } else {
-                self.movenext();
+                self.movenext()?;
             }
         }
-        self.skip_whitespace_and_peek();
+        self.skip_whitespace_and_peek()?;
         let attr_value = self.input.get(start_pos..end_pos).unwrap();
-        Event::Attribute(attr_name, attr_value)
+        Some(Event::Attribute(attr_name, attr_value))
     }
     //if the last_char is not whitespace it just return it
-    fn skip_whitespace_and_peek(&mut self) -> (usize, char) {
-        //println!("skip_whitespace{}","");
+    fn skip_whitespace_and_peek(&mut self) -> Option<(usize, char)> {
+        //libc_println!("skip_whitespace{}","");
         loop {
             let (pos, ch) = self.peek();
             if !ch.is_whitespace() {
-                //println!("!ch.is_whitespace(){}","");
-                return (pos, ch);
+                //libc_println!("!ch.is_whitespace(){}","");
+                return Some((pos, ch));
             } else {
-                self.movenext();
+                self.movenext()?;
             }
         }
     }
 
     //iterator next() is consuming the char. There is no way back.
     //But often I need to get again the same character of the last operation.
-    //The peekable.peek() sounds good, but it gives a reference and this is a problem.
-    //And then move to move the iterator. So now they are 2 separate actions.
+    //The peekable.peek() sounded good, but it gives a reference and this was a problem.
+    //So now they are 2 separate methods: movenext() and peek().
 
-    //moves the iterator, I dont need the value here to keep logic simple.
-    fn movenext(&mut self) {
-        //TODO: what to do if eof ?
-        self.last_char = self.indices.next().unwrap();
+    //moves the iterator ans stores the values,
+    //I dont need the value here, to keep logic simple.
+    fn movenext(&mut self) -> Option<usize> {
+        //Eof can be anytime. I will propagate None to the caller with ?
+        self.last_char = self.indices.next()?;
+        //return a dummy
+        Some(1)
     }
 
     //peek the next char, but does not move the iterator
