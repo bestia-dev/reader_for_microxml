@@ -9,9 +9,15 @@ readme = "README.md"
 license = "MIT"
 keywords = ["rust", "xml", "microxml"]
 categories = ["parser","lexer", "xml"]
+# this exclude is for publish to crates.io
+exclude = [
+    "docs/",
+    "example/*",
+]
 
 [dependencies]
 
 
 [badges]
 maintenance = { status = "passively-maintained" }
+
