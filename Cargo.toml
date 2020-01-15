@@ -20,6 +20,12 @@ exclude = [
     ".gitignore",
     ".gitattributes",
 ]
+include = [
+    "Cargo.toml",
+    "LICENSE",
+    "README.md",
+    "src/lib.rs",
+]
 
 [dependencies]
 
