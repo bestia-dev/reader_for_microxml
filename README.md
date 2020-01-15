@@ -1,6 +1,6 @@
 # reader for microXml
 
-*Things are changing fast. 2020-01-13 LucianoBestia ver.1.0.0.*  
+*Things are changing fast. 2020-01-13 LucianoBestia ver.1.0.2.*  
 
 There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates.  
 I found the existence of a standard (or W3C proposal) for *MicroXml* - dramatically simpler then the full Xml standard. Perfect for my use-case: I have small simple html files, that are microXml compatible.  
