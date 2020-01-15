@@ -1,6 +1,6 @@
 # reader for microXml
 
-*Things are changing fast. 2020-01-15 LucianoBestia ver.1.0.3.*  
+*Things are changing fast. 2020-01-15 LucianoBestia ver.1.0.4.*  
 
 There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates.  
 I found the existence of a standard (or W3C proposal) for *MicroXml* - dramatically simpler then the full Xml standard. Perfect for my use-case: I have small simple html files, that are microXml compatible.  
@@ -36,8 +36,7 @@ This fragments are meant for a html templating for dodrio.
 Because of the small size of fragments, I can put all the text in memory in a string.  
 Only basic mal-formed incorrectness produce errors. I am not trying to return errors for all the possible mal-formed incorrectness in microXml.  
 The speed is not really important, but the size of the code is, because it will be used in WebAssembly. Every code is too big for Wasm!  
-The crate has NO dependencies, NO allocations.  
-Probably it could be also `#![no_std]`, but I don't need that.  
+The crate has NO dependencies, NO allocations, `#![no_std]`.  
 
 ## Examples
 

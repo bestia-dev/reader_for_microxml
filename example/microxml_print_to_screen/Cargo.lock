@@ -2,12 +2,12 @@
 # It is not intended for manual editing.
 [[package]]
 name = "microxml_print_to_screen"
-version = "1.0.3"
+version = "1.0.4"
 dependencies = [
- "reader_for_microxml 1.0.3",
+ "reader_for_microxml 1.0.4",
 ]
 
 [[package]]
 name = "reader_for_microxml"
-version = "1.0.3"
+version = "1.0.4"
 

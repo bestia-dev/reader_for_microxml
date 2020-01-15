@@ -1,6 +1,6 @@
 [package]
 name = "reader_for_microxml"
-version = "1.0.3"
+version = "1.0.4"
 authors = ["Luciano Bestia <luciano.bestia@gmail.com>"]
 edition = "2018"
 description="reader for microXml"
@@ -9,17 +9,8 @@ readme = "README.md"
 license = "MIT"
 keywords = ["rust", "xml", "microxml"]
 categories = ["parsing"]
+# publish to crates.io only these files
 publish = true
-# this exclude is for publish to crates.io
-exclude = [
-    "docs/",
-    "example/",
-    "changelog.md",
-    "rustfmt.toml",
-    "Makefile.toml",
-    ".gitignore",
-    ".gitattributes",
-]
 include = [
     "Cargo.toml",
     "LICENSE",
