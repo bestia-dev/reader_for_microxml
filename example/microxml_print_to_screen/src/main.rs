@@ -25,7 +25,15 @@ fn main() {
     let file_name = &args[1];
     println!("load file: {}", file_name);
     let text = load_file(file_name);
-    read_and_print(&text);
+    let result = read_and_print(&text);
+    match result {
+        Ok(()) => {
+            println!("result = ok");
+        }
+        Err(err) => {
+            println!("Error: {}", err);
+        }
+    }
 }
 
 /// load file
@@ -37,7 +45,7 @@ fn load_file(path: &str) -> String {
 }
 
 /// read xml and write to screen
-pub fn read_and_print(input: &str) {
+pub fn read_and_print(input: &str) -> Result<(), String> {
     let mut pp = ReaderForMicroXml::new(input);
     println!("\n{}\n\n", input);
     loop {
@@ -55,12 +63,11 @@ pub fn read_and_print(input: &str) {
                 println!("End Element name=\"{}\"", name);
             }
             Event::Error(error_msg) => {
-                println!("Error: {}", error_msg);
-                break;
+                return Err(format!("Error: {}", error_msg));
             }
             Event::Eof => {
                 println!("Eof {}", "");
-                break;
+                return Ok(());
             }
         }
     }

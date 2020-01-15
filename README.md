@@ -43,7 +43,38 @@ Probably it could be also `#![no_std]`, but I don't need that.
 
 Find examples how to use it in the repository on github.  
 Go to the /example/ folder.  
-<https://github.com/LucianoBestia/reader_for_microxml>
+<https://github.com/LucianoBestia/reader_for_microxml>  
+
+```rust
+/// read xml and write to screen
+pub fn read_and_print(input: &str) -> Result<(), String> {
+    let mut pp = ReaderForMicroXml::new(input);
+    println!("\n{}\n\n", input);
+    loop {
+        match pp.read_event() {
+            Event::StartElement(name) => {
+                println!("Start Element name=\"{}\"", name);
+            }
+            Event::Attribute(name, value) => {
+                println!("Attribute name=\"{}\" value=\"{}\"", name, value);
+            }
+            Event::TextNode(txt) => {
+                println!("Text \"{}\"", txt);
+            }
+            Event::EndElement(name) => {
+                println!("End Element name=\"{}\"", name);
+            }
+            Event::Error(error_msg) => {
+                return Err(format!("Error: {}", error_msg));
+            }
+            Event::Eof => {
+                println!("Eof {}", "");
+                return Ok(());
+            }
+        }
+    }
+}
+```
 
 ## References
 
