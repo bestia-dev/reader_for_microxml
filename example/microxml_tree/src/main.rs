@@ -18,6 +18,7 @@ use reader_for_microxml::{ReaderForMicroXml, Event};
 pub enum Node {
     Element(Element),
     Text(String),
+    Comment(String),
 }
 
 #[derive(Debug)]
@@ -112,6 +113,9 @@ fn fill_element(pp: &mut ReaderForMicroXml, element: &mut Element) -> Result<(),
             }
             Event::TextNode(txt) => {
                 element.nodes.push(Node::Text(txt.to_owned()));
+            }
+            Event::Comment(txt) => {
+                element.nodes.push(Node::Comment(txt.to_owned()));
             }
             Event::EndElement(_name) => {
                 return Ok(());

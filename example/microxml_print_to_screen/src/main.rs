@@ -59,6 +59,9 @@ pub fn read_and_print(input: &str) -> Result<(), String> {
             Event::TextNode(txt) => {
                 println!("Text \"{}\"", txt);
             }
+            Event::Comment(txt) => {
+                println!("Comment \"{}\"", txt);
+            }
             Event::EndElement(name) => {
                 println!("End Element name=\"{}\"", name);
             }

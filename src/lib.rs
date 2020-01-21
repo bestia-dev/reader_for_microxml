@@ -1,7 +1,7 @@
 //region: lmake_readme insert "readme.md"
 //! # reader for microXml
 //! 
-//! *Things are changing fast. 2020-01-15 LucianoBestia ver.1.0.4.*  
+//! *Things are changing fast. 2020-01-21 LucianoBestia ver.1.0.4.*  
 //! 
 //! There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates.  
 //! I found the existence of a standard (or W3C proposal) for *MicroXml* - dramatically simpler then the full Xml standard. Perfect for my use-case: I have small simple html files, that are microXml compatible.  
@@ -24,7 +24,7 @@
 //! 
 //! MicroXml can be only in utf-8. I am lucky, because Rust Strings are internally utf-8 and are automatically checked for correctness.  
 //! MicroXml should go through normalization: CR & CRLF should be converted to LF, but I don't do that here.  
-//! MicroXml can contain Comments, but they are not microXml data, so I just skip them.  
+//! MicroXml can contain Comments, but they are not official microXml data. But I need them for my templating project.  
 //! Whitespaces are completely preserved in Text Nodes. For me they are significant. Also newline and Tabs. This is different from full Xml whitespace processing.  
 //! All other whitespaces are ignored - they are insignificant.  
 //! 
@@ -60,6 +60,9 @@
 //!             }
 //!             Event::TextNode(txt) => {
 //!                 println!("Text \"{}\"", txt);
+//!             }
+//!             Event::Comment(txt) => {
+//!                 println!("Comment \"{}\"", txt);
 //!             }
 //!             Event::EndElement(name) => {
 //!                 println!("End Element name=\"{}\"", name);
@@ -115,8 +118,10 @@ pub enum Event<'a> {
     EndElement(&'a str),
     /// Attribute  
     Attribute(&'a str, &'a str),
-    /// Child Text between `StartElement` and `EndElement`.  
+    /// Text node between `StartElement` and `EndElement`.  
     TextNode(&'a str),
+    /// comment node
+    Comment(&'a str),
     /// Error when reading  
     Error(&'static str),
     /// End of microXml document  
@@ -190,10 +195,9 @@ impl<'a> ReaderForMicroXml<'_> {
                         self.read_element_name()
                     } else if ch == '!' {
                         // this is a comment <!-- xxx -->
-                        // skip the comment because it is no data in MicroXml standard
-                        self.skip_comment()?;
-                        // recursive calling
-                        return Some(self.read_event());
+                        // comment are not data in MicroXml standard
+                        // but I need them for my templating project
+                        self.read_comment()
                     } else {
                         // the end element look like this </xxx>
                         self.read_end_element()
@@ -386,21 +390,25 @@ impl<'a> ReaderForMicroXml<'_> {
     }
 
     /// Comments are not data for MicroXml standard,  
-    /// They are ignored, I don't return them.  
+    /// But I need them as data for my templating project.  
     /// The Option is returned only because of Option None propagation because of Eof.  
-    fn skip_comment(&mut self) -> Option<usize> {
+    fn read_comment(&mut self) -> Option<Event> {
         // comments looks like this <!-- xxx -->
         // we should be now at the second character  <!
+        self.move_next_char()?; // skip char !
         self.move_next_char()?; // skip char -
         self.move_next_char()?; // skip char -
-
+        let (pos, _ch) = self.get_last_char();
+        let start_pos = pos;
+        let end_pos;
         // read until end of comment -->
         let mut ch1 = ' ';
         let mut ch2 = ' ';
         loop {
-            let (_pos, ch3) = self.get_last_char();
+            let (pos, ch3) = self.get_last_char();
             // end delimiter -->
             if ch1 == '-' && ch2 == '-' && ch3 == '>' {
+                end_pos = pos - 2;
                 self.move_next_char()?;
                 break;
             } else {
@@ -411,8 +419,8 @@ impl<'a> ReaderForMicroXml<'_> {
         }
         self.skip_whitespace_and_get_last_char()?;
         self.tag_state = TagState::OutsideOfTag;
-        // returns a dummy only because of Option None propagation because of Eof
-        Some(0)
+        // unwrap because I am confident that start_pos or end_pos are correct
+        return Some(Event::Comment(self.input.get(start_pos..end_pos).unwrap()));
     }
 
     // region: methods for iterator
