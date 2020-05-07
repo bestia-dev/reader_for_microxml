@@ -1,4 +1,4 @@
-//region: lmake_readme insert "readme.md"
+// region: lmake_readme include "readme.md" //! A
 //! # reader for microXml
 //! 
 //! *Things are changing fast. 2020-01-21 LucianoBestia ver.1.0.4.*  
@@ -87,7 +87,7 @@
 //! <https://github.com/RazrFalcon/roxmltree>  
 
 
-//endregion: lmake_readme insert "readme.md"
+// endregion: lmake_readme include "readme.md" //! A
 
 #![no_std]
 
