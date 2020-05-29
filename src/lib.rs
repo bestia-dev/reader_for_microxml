@@ -38,13 +38,17 @@
 //! Because of the small size of fragments, I can put all the text in memory in a string.  
 //! Only basic mal-formed incorrectness produce errors. I am not trying to return errors for all the possible mal-formed incorrectness in microXml.  
 //! The speed is not really important, but the size of the code is, because it will be used in WebAssembly. Every code is too big for Wasm!  
-//! The crate has NO dependencies, NO allocations, `#![no_std]`.  
+//! The crate has `#![no_std]`, NO dependencies, NO allocations, .  
+//! 
+//! ## iterator
+//! 
+//! The reader is an iterator. It implements the trait of the iterator. To process all tokens you can use this syntax:  
+//! ```rust
+//! for result_token in reader_iterator {
+//! ```
+//! In the example below is all the code
 //! 
 //! ## Possible enhancements
-//! 
-//! ### Tests
-//! 
-//! I must add some integration tests to the source code. In the case I will modify the code later.
 //! 
 //! ### Speed
 //! 
@@ -54,20 +58,13 @@
 //! <https://betterexplained.com/articles/unicode/>  
 //! <https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/>  
 //! 
-//! ### Iterator
-//! 
-//! Adding an iterator that return a Result<> could be beneficial. But I don't know
-//! yet how to do that.  
-//! 
 //! ## Examples
 //! 
-//! Find examples how to use it in the repository on github.  
+//! Find examples in the repository on github.  
 //! Go to the /example/ folder.  
 //! <https://github.com/LucianoBestia/reader_for_microxml>  
-//! Even better is if you look at how I use it in my game  
-//! <https://github.com/LucianoBestia/mem6>  
-//! I plan to use the reader in a library for html_templating  
-//! <https://github.com/LucianoBestia/dodrio_templating>  
+//! Or go to the playground and run the code immediately:  
+//! <https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=f281feb008c0cff10623deafa1cdae5f>
 //! 
 //! ```rust
 //! /// read xml and write to screen
@@ -130,7 +127,7 @@
 //! <https://github.com/RazrFalcon/roxmltree>  
 // endregion: lmake_readme include "readme.md" //! A
 
-//#![no_std]
+#![no_std]
 
 pub struct PosChar {
     pub pos: usize,
@@ -386,8 +383,7 @@ impl<'a> ReaderForMicroXml<'a> {
         if self.last_char.ch == '>' {
             // after the End element is possible to have a correct Eof
             if let Some(()) = self.move_next_char() {
-                println!("EndElement");
-                dbg!(self.last_char.pos);
+                //dbg!(self.last_char.pos);
                 self.start_of_text_node_before_whitespace = self.last_char.pos;
                 if let Some(()) = self.move_over_whitespaces() {
                     self.tag_state = TagState::OutsideOfTag;
@@ -429,7 +425,6 @@ impl<'a> ReaderForMicroXml<'a> {
                 break;
             } else {
                 if self.move_next_char().is_none(){
-                    println!("self.move_next_char().is_none()");
                     end_pos += 1;
                     self.tag_state = TagState::EndOfFile;
                     break;
@@ -438,7 +433,7 @@ impl<'a> ReaderForMicroXml<'a> {
         }
         // unwrap because I am confident that start_pos or end_pos are correct
         
-        dbg!(end_pos);
+        //dbg!(end_pos);
         return Some(Ok(Token::TextNode(
             self.input.get(start_pos..end_pos).unwrap(),
         )));

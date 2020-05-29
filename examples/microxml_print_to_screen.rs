@@ -38,12 +38,11 @@ fn load_file(path: &str) -> String {
 
 /// read xml and write to screen
 pub fn read_and_print(input: &str)  {
-    let pp = ReaderForMicroXml::new(input);
+    let reader_iterator = ReaderForMicroXml::new(input);
     println!("\n{}\n\n", input);
-    for res_token in pp {
+    for res_token in reader_iterator {
         match res_token{
             Ok(token)=>{
-
                 match token {
                     Token::StartElement(name) => {
                         println!("Start Element name=\"{}\"", name);

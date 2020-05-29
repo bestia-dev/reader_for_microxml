@@ -37,13 +37,17 @@ This fragments are meant for a html templating for dodrio.
 Because of the small size of fragments, I can put all the text in memory in a string.  
 Only basic mal-formed incorrectness produce errors. I am not trying to return errors for all the possible mal-formed incorrectness in microXml.  
 The speed is not really important, but the size of the code is, because it will be used in WebAssembly. Every code is too big for Wasm!  
-The crate has NO dependencies, NO allocations, `#![no_std]`.  
+The crate has `#![no_std]`, NO dependencies, NO allocations, .  
+
+## iterator
+
+The reader is an iterator. It implements the trait of the iterator. To process all tokens you can use this syntax:  
+```rust
+for result_token in reader_iterator {
+```
+In the example below is all the code
 
 ## Possible enhancements
-
-### Tests
-
-I must add some integration tests to the source code. In the case I will modify the code later.
 
 ### Speed
 
@@ -53,20 +57,13 @@ So there is no way of having them confused.
 <https://betterexplained.com/articles/unicode/>  
 <https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/>  
 
-### Iterator
-
-Adding an iterator that return a Result<> could be beneficial. But I don't know
-yet how to do that.  
-
 ## Examples
 
-Find examples how to use it in the repository on github.  
+Find examples in the repository on github.  
 Go to the /example/ folder.  
 <https://github.com/LucianoBestia/reader_for_microxml>  
-Even better is if you look at how I use it in my game  
-<https://github.com/LucianoBestia/mem6>  
-I plan to use the reader in a library for html_templating  
-<https://github.com/LucianoBestia/dodrio_templating>  
+Or go to the playground and run the code immediately:  
+<https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=f281feb008c0cff10623deafa1cdae5f>
 
 ```rust
 /// read xml and write to screen
