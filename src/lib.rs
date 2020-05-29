@@ -91,6 +91,11 @@
 
 #![no_std]
 
+pub struct PosChar{
+    pub pos:usize,
+    pub ch:char,
+}
+
 /// struct Reader for MicroXml - the Class  
 /// Rust has Structs + Traits, but for me it is just like Class/Object.  
 /// Just without inheritance.  
@@ -103,8 +108,10 @@ pub struct ReaderForMicroXml<'a> {
     indices: core::str::CharIndices<'a>,
     /// I need to know the TagState for programming as a state machine
     tag_state: TagState,
-    /// the last read character from the iterator
-    last_char: (usize, char),
+    /// the last read character from the indices iterator
+    last_char: PosChar,
+    /// for significant whitespace (in TextNode beginning)
+    last_char_before_whitespace: PosChar,
 }
 
 /// The reader_for_microxml returns events.  
@@ -138,26 +145,35 @@ enum TagState {
     Eof,
 }
 
+impl PosChar{
+    pub fn set(&mut self, tup: (usize,char)){
+        self.pos=tup.0;
+        self.ch=tup.1;
+    }
+}
+
 impl<'a> ReaderForMicroXml<'_> {
     /// Constructor. String is immutably borrowed here. No allocation.  
     pub fn new(input: &str) -> ReaderForMicroXml {
         // CharIndices is an iterator that returns a tuple: (pos, ch).
+        // I convert this into PosChar{pos, ch} for easier coding.
         // The "byte" position for using the string slice and the character.
         // This is a complication because one utf-8 character can have more bytes.
         // And the slices are defined by "bytes position", not by "character position".
         // Very important distinction!
 
         let mut indices = input.char_indices();
-        let mut last_char = (0, ' ');
+        let mut last_char = PosChar{pos:0, ch:' '};
         if input.is_empty() {
             // unwrap because it cannot error if the string is not empty
-            last_char = indices.next().unwrap();
+            last_char.set(indices.next().unwrap());
         }
         ReaderForMicroXml {
             input,
             indices,
             tag_state: TagState::OutsideOfTag,
             last_char,
+            last_char_before_whitespace: PosChar{pos:0, ch:' '},
         }
     }
 
@@ -177,23 +193,20 @@ impl<'a> ReaderForMicroXml<'_> {
     fn read_event_internal(&mut self) -> Option<Event> {
         match &self.tag_state {
             TagState::OutsideOfTag => {
-                // I have to remember the start_pos if it is a text node
-                let (pos, _ch) = self.get_last_char();
-                let start_pos = pos;
-                let (_pos, ch) = self.skip_whitespace_and_get_last_char()?;
+                self.skip_whitespace_and_get_last_char()?;
                 // Tags can look like this:
                 // Start Tags: < xxx >,  < xxx attr="val" >,  < xxx />
                 // End Tags: </xxx>
                 // Comments: <!-- xxx -->
                 // start delimiter is <
-                if ch == '<' {
+                if self.last_char.ch == '<' {
                     self.tag_state = TagState::InsideOfTag;
                     self.move_next_char()?;
-                    let (_pos, ch) = self.skip_whitespace_and_get_last_char()?;
+                    self.skip_whitespace_and_get_last_char()?;
                     // if it is not comment or end tag, must be the element name
-                    if !(ch == '!' || ch == '/') {
+                    if !(self.last_char.ch == '!' || self.last_char.ch == '/') {
                         self.read_element_name()
-                    } else if ch == '!' {
+                    } else if self.last_char.ch == '!' {
                         // this is a comment <!-- xxx -->
                         // comment are not data in MicroXml standard
                         // but I need them for my templating project
@@ -205,22 +218,22 @@ impl<'a> ReaderForMicroXml<'_> {
                 } else {
                     // the text node is between element so looks like this
                     // > text <
-                    self.read_text_node(start_pos)
+                    self.read_text_node()
                 }
             }
             TagState::InsideOfTag => {
-                let (_pos, ch) = self.skip_whitespace_and_get_last_char()?;
+                self.skip_whitespace_and_get_last_char()?;
                 // InsideOfTag (after name) can be > or attributes or self_closing
                 // < xxx >,  < xxx attr="val" >,  < xxx />
                 // if it is not self-closing or > then must be an attribute
-                if !(ch == '/' || ch == '>') {
+                if !(self.last_char.ch == '/' || self.last_char.ch == '>') {
                     // attribute
                     self.read_attribute()
-                } else if ch == '/' {
+                } else if self.last_char.ch == '/' {
                     // self-closing element
                     self.move_next_char()?; // to >
-                    let (_pos, ch) = self.skip_whitespace_and_get_last_char()?;
-                    if ch != '>' {
+                    self.skip_whitespace_and_get_last_char()?;
+                    if self.last_char.ch != '>' {
                         Some(Event::Error("Tag has / but not />"))
                     } else {
                         self.tag_state = TagState::OutsideOfTag;
@@ -246,14 +259,13 @@ impl<'a> ReaderForMicroXml<'_> {
     /// Propagation of Option None if is Eof  
     fn read_element_name(&mut self) -> Option<Event> {
         // start of tag name < xxx >
-        let (pos, _ch) = self.skip_whitespace_and_get_last_char()?;
-        let start_pos = pos;
+        self.skip_whitespace_and_get_last_char()?;
+        let start_pos = self.last_char.pos;
         let end_pos;
         loop {
-            let (pos, ch) = self.get_last_char();
             // read until delimiter space, / or >
-            if ch.is_whitespace() || ch == '/' || ch == '>' {
-                end_pos = pos;
+            if self.last_char.ch.is_whitespace() || self.last_char.ch == '/' || self.last_char.ch == '>' {
+                end_pos = self.last_char.pos;
                 break;
             } else {
                 self.move_next_char()?;
@@ -271,14 +283,13 @@ impl<'a> ReaderForMicroXml<'_> {
     /// Reads the attribute name and value.  
     /// Return Option None if Eof.  
     fn read_attribute(&mut self) -> Option<Event> {
-        let (pos, _ch) = self.skip_whitespace_and_get_last_char()?;
-        let start_pos = pos;
+        self.skip_whitespace_and_get_last_char()?;
+        let start_pos = self.last_char.pos;
         let end_pos;
         loop {
-            let (pos, ch) = self.get_last_char();
             // delimiters are whitespace or =
-            if ch.is_whitespace() || ch == '=' {
-                end_pos = pos;
+            if self.last_char.ch.is_whitespace() || self.last_char.ch == '=' {
+                end_pos = self.last_char.pos;
                 break;
             } else {
                 self.move_next_char()?;
@@ -288,26 +299,24 @@ impl<'a> ReaderForMicroXml<'_> {
         let attr_name = self.input.get(start_pos..end_pos).unwrap();
 
         // region: skip delimiters: whitespace, =, "
-        let (_pos, ch) = self.skip_whitespace_and_get_last_char()?;
-        if ch == '=' {
+        self.skip_whitespace_and_get_last_char()?;
+        if self.last_char.ch == '=' {
             self.move_next_char()?;
         }
-        let (_pos, ch) = self.skip_whitespace_and_get_last_char()?;
-        if ch == '"' {
+        self.skip_whitespace_and_get_last_char()?;
+        if self.last_char.ch == '"' {
             self.move_next_char()?;
         } else {
             return Some(Event::Error("Attribute does not have the char = ."));
         }
         // endregion
 
-        let (pos, _ch) = self.get_last_char();
-        let start_pos = pos;
+        let start_pos = self.last_char.pos;
         let end_pos;
         loop {
-            let (pos, ch) = self.get_last_char();
             // end delimiter is "
-            if ch == '"' {
-                end_pos = pos;
+            if self.last_char.ch == '"' {
+                end_pos = self.last_char.pos;
                 self.move_next_char()?;
                 break;
             } else {
@@ -326,21 +335,20 @@ impl<'a> ReaderForMicroXml<'_> {
         // end tag for element  </ xxx >
         // we are already at the / char
         self.move_next_char()?;
-        let (pos, _ch) = self.skip_whitespace_and_get_last_char()?;
-        let start_pos = pos;
+        self.skip_whitespace_and_get_last_char()?;
+        let start_pos = self.last_char.pos;
         let end_pos;
         loop {
-            let (pos, ch) = self.get_last_char();
             // read until space or >
-            if ch.is_whitespace() || ch == '>' {
-                end_pos = pos;
+            if self.last_char.ch.is_whitespace() || self.last_char.ch == '>' {
+                end_pos = self.last_char.pos;
                 break;
             } else {
                 self.move_next_char()?;
             }
         }
-        let (_pos, ch) = self.skip_whitespace_and_get_last_char()?;
-        if ch == '>' {
+        self.skip_whitespace_and_get_last_char()?;
+        if self.last_char.ch == '>' {
             // after the End element is possible to have a correct Eof
             // everywhere else it is an error
             match self.move_next_char() {
@@ -370,15 +378,15 @@ impl<'a> ReaderForMicroXml<'_> {
     /// I preserve all the "significant" whitespaces because I will use this for templating.  
     /// And because there is no hard standard for trailing spaces in xml text node.  
     /// If reached Eof propagates Option None.  
-    fn read_text_node(&mut self, start_pos: usize) -> Option<Event> {
+    fn read_text_node(&mut self) -> Option<Event> {
         // text element look like this > some text <
-        let (_pos, _ch) = self.get_last_char();
+        // it has significant whitespace start
+        let start_pos = self.last_char_before_whitespace.pos;
         let end_pos;
         loop {
-            let (pos, ch) = self.get_last_char();
             // end delimiter in <
-            if ch == '<' {
-                end_pos = pos;
+            if self.last_char.ch == '<' {
+                end_pos = self.last_char.pos;
                 self.tag_state = TagState::OutsideOfTag;
                 break;
             } else {
@@ -398,17 +406,16 @@ impl<'a> ReaderForMicroXml<'_> {
         self.move_next_char()?; // skip char !
         self.move_next_char()?; // skip char -
         self.move_next_char()?; // skip char -
-        let (pos, _ch) = self.get_last_char();
-        let start_pos = pos;
+        let start_pos = self.last_char.pos;
         let end_pos;
         // read until end of comment -->
         let mut ch1 = ' ';
         let mut ch2 = ' ';
         loop {
-            let (pos, ch3) = self.get_last_char();
+            let ch3 = self.last_char.ch;
             // end delimiter -->
             if ch1 == '-' && ch2 == '-' && ch3 == '>' {
-                end_pos = pos - 2;
+                end_pos = self.last_char.pos - 2;
                 self.move_next_char()?;
                 break;
             } else {
@@ -439,26 +446,24 @@ impl<'a> ReaderForMicroXml<'_> {
     /// only because I need to propagate the Option None because of Eof  
     fn move_next_char(&mut self) -> Option<usize> {
         // Eof can be reached anytime. I will propagate None to the caller with ?
-        self.last_char = self.indices.next()?;
+        self.last_char.set(self.indices.next()?);
         // returns a dummy only because of Option None propagation with ?
         Some(0)
     }
 
-    /// Returns the last_char, but doesn't move the iterator.  
-    /// Cannot error  
-    fn get_last_char(&self) -> (usize, char) {
-        self.last_char
-    }
-
     /// Skips all whitespaces if there is any  
     /// and returns the last_char when it is not whitespace.  
-    /// The caller must know prior to call that the whitespaces are insignificant.  
+    /// saves the whitespace beginning position, because
+    /// the caller must know if the whitespaces are insignificant.  
     /// If found Eof, propagates Option None.  
-    fn skip_whitespace_and_get_last_char(&mut self) -> Option<(usize, char)> {
+    fn skip_whitespace_and_get_last_char(&mut self) -> Option<()> {
+        if self.last_char.ch.is_whitespace() {
+            self.last_char_before_whitespace.pos = self.last_char.pos;
+            self.last_char_before_whitespace.ch = self.last_char.ch;
+        }
         loop {
-            let (pos, ch) = self.get_last_char();
-            if !ch.is_whitespace() {
-                return Some((pos, ch));
+            if !self.last_char.ch.is_whitespace() {
+                return Some(());
             } else {
                 self.move_next_char()?;
             }

@@ -1,6 +1,6 @@
 # reader for microXml
 
-*Things are changing fast. 2020-01-21 LucianoBestia ver.1.0.4.*  
+*Things are changing fast. 2020-05-29 LucianoBestia ver.1.0.4.*  
 
 There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates in wasm.  
 I found the existence of a standard (or W3C proposal) for *MicroXml* - dramatically simpler then the full Xml standard. Perfect for my use-case: I have small simple html files, that are microXml compatible.  
@@ -41,17 +41,21 @@ The crate has NO dependencies, NO allocations, `#![no_std]`.
 
 ## Possible enhancements
 
+### Tests
+
+I must add some integration tests to the source code. In the case I will modify the code later.
+
 ### Speed
 
-The speed could probably be improved if I use Vec<u8> instead of CharIndices. That could work because all the xml delimiters are ASCII characters. The specifics of
-the UTF-8 encoding is that ASCII characters can in no way be misinterpreted inside a string. They always have the first bit set to 0.  
-All other unicode characters are multi-byte and all this bytes MUST start with 1. So there is no way of having them confused.  
+The speed could probably be improved if I use Vec\<u8\> instead of CharIndices. That could work because all the xml delimiters are ASCII characters. The specifics of the UTF-8 encoding is that ASCII characters can in no way be misinterpreted inside a string. They always have the first bit set to 0.  
+All other unicode characters are multi-byte and all this bytes MUST start with bit 1.  
+So there is no way of having them confused.  
 <https://betterexplained.com/articles/unicode/>  
 <https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/>  
 
 ### Iterator
 
-Adding an iterator that return a Result<> could be beneficial. Bur I don't know
+Adding an iterator that return a Result<> could be beneficial. But I don't know
 yet how to do that.  
 
 ## Examples
@@ -105,7 +109,6 @@ to verify the trustworthiness of each of your dependencies.
 Please, spread this info.  
 On the web use this url to read crate reviews. Example:  
 <https://bestia.dev/cargo_crev_web/query/num-traits>  
-
 
 ## References
 

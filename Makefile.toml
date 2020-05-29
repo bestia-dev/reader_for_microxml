@@ -62,7 +62,7 @@ clear = true
 private = true
 description = "copy doc folder as docs (out of folder target), so it can be git comitted"
 script = [
-    "\\rsync -avz --delete-after ~/rustprojects/reader_for_microxml/target/doc/*  ~/rustprojects/reader_for_microxml/docs/"
+    "\\rsync -avz --delete-after /mnt/c/Users/Luciano/rustprojects/reader_for_microxml/target/doc/*  /mnt/c/Users/Luciano/rustprojects/reader_for_microxml/docs/"
 ]
 
 [tasks.build_release]
