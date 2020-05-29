@@ -12,7 +12,7 @@ use std::env;
 use std::io::Read;
 use std::process;
 
-use reader_for_microxml::{ReaderForMicroXml, Event};
+use reader_for_microxml::{ReaderForMicroXml, Token};
 
 #[derive(Debug)]
 pub enum Node {
@@ -66,8 +66,8 @@ fn get_root_element(input: &str) -> Result<Element, String> {
     println!("\n{}\n\n", input);
 
     let mut root_element;
-    match pp.read_event() {
-        Event::StartElement(name) => {
+    match pp.read_token() {
+        Token::StartElement(name) => {
             root_element = Element {
                 name: name.to_owned(),
                 attributes: Vec::new(),
@@ -94,8 +94,8 @@ fn get_root_element(input: &str) -> Result<Element, String> {
 /// returns Result only because of errors
 fn fill_element(pp: &mut ReaderForMicroXml, element: &mut Element) -> Result<(), String> {
     loop {
-        match pp.read_event() {
-            Event::StartElement(name) => {
+        match pp.read_token() {
+            Token::StartElement(name) => {
                 //make a child element and fill it (recursive)
                 let mut child_element = Element {
                     name: name.to_owned(),
@@ -105,25 +105,25 @@ fn fill_element(pp: &mut ReaderForMicroXml, element: &mut Element) -> Result<(),
                 fill_element(pp, &mut child_element);
                 element.nodes.push(Node::Element(child_element));
             }
-            Event::Attribute(name, value) => {
+            Token::Attribute(name, value) => {
                 element.attributes.push(Attribute {
                     name: name.to_owned(),
                     value: value.to_owned(),
                 });
             }
-            Event::TextNode(txt) => {
+            Token::TextNode(txt) => {
                 element.nodes.push(Node::Text(txt.to_owned()));
             }
-            Event::Comment(txt) => {
+            Token::Comment(txt) => {
                 element.nodes.push(Node::Comment(txt.to_owned()));
             }
-            Event::EndElement(_name) => {
+            Token::EndElement(_name) => {
                 return Ok(());
             }
-            Event::Error(error_msg) => {
+            Token::Error(error_msg) => {
                 return Err(format!("Error: {}", error_msg));
             }
-            Event::Eof => {
+            Token::Eof => {
                 return Ok(());
             }
         }

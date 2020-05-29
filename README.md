@@ -70,35 +70,46 @@ I plan to use the reader in a library for html_templating
 
 ```rust
 /// read xml and write to screen
-pub fn read_and_print(input: &str) -> Result<(), String> {
-    let mut pp = ReaderForMicroXml::new(input);
-    println!("\n{}\n\n", input);
-    loop {
-        match pp.read_event() {
-            Event::StartElement(name) => {
-                println!("Start Element name=\"{}\"", name);
-            }
-            Event::Attribute(name, value) => {
-                println!("Attribute name=\"{}\" value=\"{}\"", name, value);
-            }
-            Event::TextNode(txt) => {
-                println!("Text \"{}\"", txt);
-            }
-            Event::Comment(txt) => {
-                println!("Comment \"{}\"", txt);
-            }
-            Event::EndElement(name) => {
-                println!("End Element name=\"{}\"", name);
-            }
-            Event::Error(error_msg) => {
-                return Err(format!("Error: {}", error_msg));
-            }
-            Event::Eof => {
-                println!("Eof {}", "");
-                return Ok(());
+use reader_for_microxml::*;
+
+fn main(){
+    let str_xml = r#"<html>test</html>"#;
+    let mut reader_iterator = ReaderForMicroXml::new(str_xml);
+    let result = read_xml_to_debug_string(&mut reader_iterator);
+    println!("Result: {}", result)
+}
+
+fn read_xml_to_debug_string(reader_iterator: &mut ReaderForMicroXml) -> String {
+    let mut result = String::new();
+    // reader_iterator is iterator Option<Result<Token,&str>>
+    // the first option is used for the iterator to know where is the end
+    // then the Result can have an Token or an Error
+    for result_token in reader_iterator {
+        match result_token {
+            Ok(token) => match token {
+                Token::StartElement(name) => {
+                    result.push_str(&format!("Start: \"{}\"\n", name));
+                }
+                Token::Attribute(name, value) => {
+                    result.push_str(&format!("Attribute: \"{}\" = \"{}\"\n", name, value));
+                }
+                Token::TextNode(txt) => {
+                    result.push_str(&format!("Text: \"{}\"\n", txt));
+                }
+                Token::Comment(txt) => {
+                    result.push_str(&format!("Comment: \"{}\"\n", txt));
+                }
+                Token::EndElement(name) => {
+                    result.push_str(&format!("End: \"{}\"\n", name));
+                }
+            },
+            Err(err_msg) => {
+                panic!(err_msg);
             }
         }
     }
+    //return
+    result
 }
 ```
 

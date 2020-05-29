@@ -11,7 +11,7 @@ use std::env;
 use std::io::Read;
 use std::process;
 
-use reader_for_microxml::{ReaderForMicroXml, Event};
+use reader_for_microxml::{ReaderForMicroXml, Token};
 
 /// starting function
 fn main() {
@@ -25,15 +25,7 @@ fn main() {
     let file_name = &args[1];
     println!("load file: {}", file_name);
     let text = load_file(file_name);
-    let result = read_and_print(&text);
-    match result {
-        Ok(()) => {
-            println!("result = ok");
-        }
-        Err(err) => {
-            println!("Error: {}", err);
-        }
-    }
+    read_and_print(&text);
 }
 
 /// load file
@@ -45,33 +37,32 @@ fn load_file(path: &str) -> String {
 }
 
 /// read xml and write to screen
-pub fn read_and_print(input: &str) -> Result<(), String> {
-    let mut pp = ReaderForMicroXml::new(input);
+pub fn read_and_print(input: &str)  {
+    let pp = ReaderForMicroXml::new(input);
     println!("\n{}\n\n", input);
-    loop {
-        match pp.read_event() {
-            Event::StartElement(name) => {
-                println!("Start Element name=\"{}\"", name);
+    for res_token in pp {
+        match res_token{
+            Ok(token)=>{
+
+                match token {
+                    Token::StartElement(name) => {
+                        println!("Start Element name=\"{}\"", name);
+                    }
+                    Token::Attribute(name, value) => {
+                        println!("Attribute name=\"{}\" value=\"{}\"", name, value);
+                    }
+                    Token::TextNode(txt) => {
+                        println!("Text \"{}\"", txt);
+                    }
+                    Token::Comment(txt) => {
+                        println!("Comment \"{}\"", txt);
+                    }
+                    Token::EndElement(name) => {
+                        println!("End Element name=\"{}\"", name);
+                    }
+                }
             }
-            Event::Attribute(name, value) => {
-                println!("Attribute name=\"{}\" value=\"{}\"", name, value);
-            }
-            Event::TextNode(txt) => {
-                println!("Text \"{}\"", txt);
-            }
-            Event::Comment(txt) => {
-                println!("Comment \"{}\"", txt);
-            }
-            Event::EndElement(name) => {
-                println!("End Element name=\"{}\"", name);
-            }
-            Event::Error(error_msg) => {
-                return Err(format!("Error: {}", error_msg));
-            }
-            Event::Eof => {
-                println!("Eof {}", "");
-                return Ok(());
-            }
+            Err(error_msg)=> println!("Error text=\"{}\"", error_msg),
         }
     }
 }
