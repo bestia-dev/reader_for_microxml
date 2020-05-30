@@ -37,31 +37,29 @@ fn load_file(path: &str) -> String {
 }
 
 /// read xml and write to screen
-pub fn read_and_print(input: &str)  {
+pub fn read_and_print(input: &str) {
     let reader_iterator = ReaderForMicroXml::new(input);
     println!("\n{}\n\n", input);
     for res_token in reader_iterator {
-        match res_token{
-            Ok(token)=>{
-                match token {
-                    Token::StartElement(name) => {
-                        println!("Start Element name=\"{}\"", name);
-                    }
-                    Token::Attribute(name, value) => {
-                        println!("Attribute name=\"{}\" value=\"{}\"", name, value);
-                    }
-                    Token::TextNode(txt) => {
-                        println!("Text \"{}\"", txt);
-                    }
-                    Token::Comment(txt) => {
-                        println!("Comment \"{}\"", txt);
-                    }
-                    Token::EndElement(name) => {
-                        println!("End Element name=\"{}\"", name);
-                    }
+        match res_token {
+            Ok(token) => match token {
+                Token::StartElement(name) => {
+                    println!("Start Element name=\"{}\"", name);
                 }
-            }
-            Err(error_msg)=> println!("Error text=\"{}\"", error_msg),
+                Token::Attribute(name, value) => {
+                    println!("Attribute name=\"{}\" value=\"{}\"", name, value);
+                }
+                Token::TextNode(txt) => {
+                    println!("Text \"{}\"", txt);
+                }
+                Token::Comment(txt) => {
+                    println!("Comment \"{}\"", txt);
+                }
+                Token::EndElement(name) => {
+                    println!("End Element name=\"{}\"", name);
+                }
+            },
+            Err(error_msg) => println!("Error text=\"{}\"", error_msg),
         }
     }
 }

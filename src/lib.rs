@@ -1,7 +1,9 @@
 // region: lmake_readme include "readme.md" //! A
 //! # reader for microXml
 //! 
-//! *Things are changing fast. 2020-05-29 LucianoBestia ver.1.0.4.*  
+//! version: 1.1.6  date: 2020-05-29 authors: Luciano Bestia  
+//! **reader for microXml - the simplified subset of xml**
+//! 
 //! 
 //! There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates in wasm.  
 //! I found the existence of a standard (or W3C proposal) for *MicroXml* - dramatically simpler then the full Xml standard. Perfect for my use-case: I have small simple html files, that are microXml compatible.  
@@ -42,11 +44,12 @@
 //! 
 //! ## iterator
 //! 
-//! The reader is an iterator. It implements the trait of the iterator. To process all tokens you can use this syntax:  
-//! ```rust
-//! for result_token in reader_iterator {
-//! ```
-//! In the example below is all the code
+//! The reader is an iterator.  
+//! It implements the trait of the iterator.  
+//! Use this syntax to process all tokens:  
+//! `for result_token in reader_iterator {`  
+//! or  
+//! `let x: Option<Result<Token, &str>> = reader_iterator.next();`  
 //! 
 //! ## Possible enhancements
 //! 
@@ -58,13 +61,19 @@
 //! <https://betterexplained.com/articles/unicode/>  
 //! <https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/>  
 //! 
+//! ## Tests
+//! 
+//! Run the tests with:  
+//! `clear; cargo make test`  
+//! 
 //! ## Examples
 //! 
 //! Find examples in the repository on github.  
-//! Go to the /example/ folder.  
-//! <https://github.com/LucianoBestia/reader_for_microxml>  
-//! Or go to the playground and run the code immediately:  
-//! <https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=f281feb008c0cff10623deafa1cdae5f>
+//! Run them with:
+//! `clear; cargo make run_rel1`  
+//! `clear; cargo make run_rel2`  
+//! it is a shortcut to:  
+//! `cargo run --example microxml_tree examples/t2.html`
 //! 
 //! ```rust
 //! /// read xml and write to screen
@@ -262,7 +271,7 @@ impl<'a> ReaderForMicroXml<'a> {
                     self.move_next_char()?; // to >
                     self.move_over_whitespaces()?;
                     if self.last_char.ch != '>' {
-                        return Some( Err("Error: Tag has / but not />"));
+                        return Some(Err("Error: Tag has / but not />"));
                     } else {
                         self.tag_state = TagState::OutsideOfTag;
                         self.move_next_char()?;
@@ -277,7 +286,7 @@ impl<'a> ReaderForMicroXml<'a> {
                     return self.read_token_internal();
                 }
             }
-            TagState::EndOfFile=>{
+            TagState::EndOfFile => {
                 //return None to stop the iterator
                 None
             }
@@ -424,7 +433,7 @@ impl<'a> ReaderForMicroXml<'a> {
                 self.tag_state = TagState::OutsideOfTag;
                 break;
             } else {
-                if self.move_next_char().is_none(){
+                if self.move_next_char().is_none() {
                     end_pos += 1;
                     self.tag_state = TagState::EndOfFile;
                     break;
@@ -432,7 +441,7 @@ impl<'a> ReaderForMicroXml<'a> {
             }
         }
         // unwrap because I am confident that start_pos or end_pos are correct
-        
+
         //dbg!(end_pos);
         return Some(Ok(Token::TextNode(
             self.input.get(start_pos..end_pos).unwrap(),

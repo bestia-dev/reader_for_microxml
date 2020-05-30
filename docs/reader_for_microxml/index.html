@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `reader_for_microxml` crate."><meta name="keywords" content="rust, rustlang, rust-lang, reader_for_microxml"><title>reader_for_microxml - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="shortcut icon" href="../favicon.ico"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../reader_for_microxml/index.html'><div class='logo-container'><img src='../rust-logo.png' alt='logo'></div></a><p class='location'>Crate reader_for_microxml</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all reader_for_microxml's items</p></a><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'reader_for_microxml', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/reader_for_microxml/lib.rs.html#2-532' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>reader_for_microxml</a></span></h1><div class='docblock'><h1 id="reader-for-microxml" class="section-header"><a href="#reader-for-microxml">reader for microXml</a></h1>
+<p>version: 1.1.6  date: 2020-05-29 authors: Luciano Bestia<br />
+<strong>reader for microXml - the simplified subset of xml</strong></p>
+<p>There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates in wasm.<br />
+I found the existence of a standard (or W3C proposal) for <em>MicroXml</em> - dramatically simpler then the full Xml standard. Perfect for my use-case: I have small simple html files, that are microXml compatible.</p>
+<h2 id="microxml" class="section-header"><a href="#microxml">microXml</a></h2>
+<p>MicroXML is a subset of XML. It is dramatically simpler.<br />
+<a href="https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/">https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/</a><br />
+<a href="https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html">https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html</a><br />
+MicroXML is actually well-formed Xml.<br />
+In the data model of MicroXml there are no CData, namespaces, declarations, processing instructions,...<br />
+An example of all can be done in a well-formed microXml:</p>
+<pre><code class="language-xml">&lt;memo lang=&quot;en&quot; date=&quot;2017-05-01&quot;&gt;
+    I &lt;em&gt;love&lt;/em&gt; microXML!&lt;br /&gt;
+    &lt;!-- some comment --&gt;
+    It's so clean &amp;amp; simple.
+&lt;/memo&gt;
+</code></pre>
+<p>MicroXml can be only in utf-8. I am lucky, because Rust Strings are internally utf-8 and are automatically checked for correctness.<br />
+MicroXml should go through normalization: CR &amp; CRLF should be converted to LF, but I don't do that here. Also decoding xml control characters &quot;, &amp;,... or decoding unicode encodings like  , ,... is not inside the reader. This is left for a higher library to choose what to do with it.<br />
+MicroXml can contain Comments, but they are not official microXml data. But I need them for my templating project.<br />
+Whitespaces are completely preserved in Text Nodes. For me they are significant. Also newline and Tabs. This is different from full Xml whitespace processing.<br />
+All other whitespaces are ignored - they are insignificant.</p>
+<h2 id="reader" class="section-header"><a href="#reader">reader</a></h2>
+<p>This ReaderForMicroXml obviously cannot read a complicated full XML.<br />
+This <code>reader_for_microxml</code> is used for small html fragments.<br />
+They must be well-formed microXml.<br />
+This fragments are meant for a html templating for dodrio.<br />
+Because of the small size of fragments, I can put all the text in memory in a string.<br />
+Only basic mal-formed incorrectness produce errors. I am not trying to return errors for all the possible mal-formed incorrectness in microXml.<br />
+The speed is not really important, but the size of the code is, because it will be used in WebAssembly. Every code is too big for Wasm!<br />
+The crate has <code>#![no_std]</code>, NO dependencies, NO allocations, .</p>
+<h2 id="iterator" class="section-header"><a href="#iterator">iterator</a></h2>
+<p>The reader is an iterator.<br />
+It implements the trait of the iterator.<br />
+Use this syntax to process all tokens:<br />
+<code>for result_token in reader_iterator {</code><br />
+or<br />
+<code>let x: Option&lt;Result&lt;Token, &amp;str&gt;&gt; = reader_iterator.next();</code></p>
+<h2 id="possible-enhancements" class="section-header"><a href="#possible-enhancements">Possible enhancements</a></h2><h3 id="speed" class="section-header"><a href="#speed">Speed</a></h3>
+<p>The speed could probably be improved if I use Vec&lt;u8&gt; instead of CharIndices. That could work because all the xml delimiters are ASCII characters. The specifics of the UTF-8 encoding is that ASCII characters can in no way be misinterpreted inside a string. They always have the first bit set to 0.<br />
+All other unicode characters are multi-byte and all this bytes MUST start with bit 1.<br />
+So there is no way of having them confused.<br />
+<a href="https://betterexplained.com/articles/unicode/">https://betterexplained.com/articles/unicode/</a><br />
+<a href="https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/">https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/</a></p>
+<h2 id="tests" class="section-header"><a href="#tests">Tests</a></h2>
+<p>Run the tests with:<br />
+<code>clear; cargo make test</code></p>
+<h2 id="examples" class="section-header"><a href="#examples">Examples</a></h2>
+<p>Find examples in the repository on github.<br />
+Run them with:
+<code>clear; cargo make run_rel1</code><br />
+<code>clear; cargo make run_rel2</code><br />
+it is a shortcut to:<br />
+<code>cargo run --example microxml_tree examples/t2.html</code></p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="doccomment">/// read xml and write to screen</span>
+<span class="kw">use</span> <span class="ident">reader_for_microxml</span>::<span class="kw-2">*</span>;
+ 
+<span class="kw">fn</span> <span class="ident">main</span>(){
+    <span class="kw">let</span> <span class="ident">str_xml</span> <span class="op">=</span> <span class="string">r#&quot;&lt;html&gt;test&lt;/html&gt;&quot;#</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">reader_iterator</span> <span class="op">=</span> <span class="ident">ReaderForMicroXml</span>::<span class="ident">new</span>(<span class="ident">str_xml</span>);
+    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">read_xml_to_debug_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">reader_iterator</span>);
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Result: {}&quot;</span>, <span class="ident">result</span>)
+}
+ 
+<span class="kw">fn</span> <span class="ident">read_xml_to_debug_string</span>(<span class="ident">reader_iterator</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ReaderForMicroXml</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
+    <span class="comment">// reader_iterator is iterator Option&lt;Result&lt;Token,&amp;str&gt;&gt;</span>
+    <span class="comment">// the first option is used for the iterator to know where is the end</span>
+    <span class="comment">// then the Result can have an Token or an Error</span>
+    <span class="kw">for</span> <span class="ident">result_token</span> <span class="kw">in</span> <span class="ident">reader_iterator</span> {
+        <span class="kw">match</span> <span class="ident">result_token</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">token</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">token</span> {
+                <span class="ident">Token</span>::<span class="ident">StartElement</span>(<span class="ident">name</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">result</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Start: \&quot;{}\&quot;\n&quot;</span>, <span class="ident">name</span>));
+                }
+                <span class="ident">Token</span>::<span class="ident">Attribute</span>(<span class="ident">name</span>, <span class="ident">value</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">result</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Attribute: \&quot;{}\&quot; = \&quot;{}\&quot;\n&quot;</span>, <span class="ident">name</span>, <span class="ident">value</span>));
+                }
+                <span class="ident">Token</span>::<span class="ident">TextNode</span>(<span class="ident">txt</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">result</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Text: \&quot;{}\&quot;\n&quot;</span>, <span class="ident">txt</span>));
+                }
+                <span class="ident">Token</span>::<span class="ident">Comment</span>(<span class="ident">txt</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">result</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Comment: \&quot;{}\&quot;\n&quot;</span>, <span class="ident">txt</span>));
+                }
+                <span class="ident">Token</span>::<span class="ident">EndElement</span>(<span class="ident">name</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">result</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;End: \&quot;{}\&quot;\n&quot;</span>, <span class="ident">name</span>));
+                }
+            },
+            <span class="prelude-val">Err</span>(<span class="ident">err_msg</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="macro">panic</span><span class="macro">!</span>(<span class="ident">err_msg</span>);
+            }
+        }
+    }
+    <span class="comment">//return</span>
+    <span class="ident">result</span>
+}</pre></div>
+<h2 id="cargo-crev-reviews-and-advisory" class="section-header"><a href="#cargo-crev-reviews-and-advisory">cargo crev reviews and advisory</a></h2>
+<p>It is recommended to always use <a href="https://github.com/crev-dev/cargo-crev">cargo-crev</a><br />
+to verify the trustworthiness of each of your dependencies.<br />
+Please, spread this info.<br />
+On the web use this url to read crate reviews. Example:<br />
+<a href="https://bestia.dev/cargo_crev_web/query/num-traits">https://bestia.dev/cargo_crev_web/query/num-traits</a></p>
+<h2 id="references" class="section-header"><a href="#references">References</a></h2>
+<p><a href="https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html">https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html</a><br />
+<a href="https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/">https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/</a><br />
+<a href="https://github.com/tafia/quick-xml">https://github.com/tafia/quick-xml</a><br />
+<a href="https://github.com/RazrFalcon/roxmltree">https://github.com/RazrFalcon/roxmltree</a>  </p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table><tr class='module-item'><td><a class="struct" href="struct.PosChar.html" title='reader_for_microxml::PosChar struct'>PosChar</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="struct" href="struct.ReaderForMicroXml.html" title='reader_for_microxml::ReaderForMicroXml struct'>ReaderForMicroXml</a></td><td class='docblock-short'><p>struct Reader for MicroXml - the Class<br />
+Rust has Structs + Traits, but for me it is just like Class/Object.<br />
+Just without inheritance.<br />
+All the fields are internal and not public.<br />
+The only way to interact is through methods.  </p>
+</td></tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table><tr class='module-item'><td><a class="enum" href="enum.TagState.html" title='reader_for_microxml::TagState enum'>TagState</a></td><td class='docblock-short'><p>internal enum: Tags are strings inside delimiters <code>&lt; and &gt;  like &lt;div&gt; or &lt;/div&gt;</code>  </p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.Token.html" title='reader_for_microxml::Token enum'>Token</a></td><td class='docblock-short'><p>The reader_for_microxml returns tokens.<br />
+The caller will manage this tokens. So they must be public.<br />
+The string slices are reference to the original string with microXml text  </p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../";window.currentCrate = "reader_for_microxml";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

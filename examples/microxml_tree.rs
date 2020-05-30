@@ -70,51 +70,54 @@ fn get_root_element(input: &str) -> Result<Element, String> {
         attributes: Vec::new(),
         nodes: Vec::new(),
     };
-        let opt_result_token = reader_iterator.next();
-        if let Some(result_token) = opt_result_token{
-            match result_token{
-                Ok(token)=>{
-                    match token {
-                        //only one root element
-                        Token::StartElement(name) => {
-                            root_element = Element {
-                                name: name.to_owned(),
-                                attributes: Vec::new(),
-                                nodes: Vec::new(),
-                            };
-                            //recursive function can return error
-                            match fill_element(&mut reader_iterator, &mut root_element) {
-                                Ok(()) => {}
-                                Err(err) => {
-                                    return Err(err);
-                                }
+    let opt_result_token = reader_iterator.next();
+    if let Some(result_token) = opt_result_token {
+        match result_token {
+            Ok(token) => {
+                match token {
+                    //only one root element
+                    Token::StartElement(name) => {
+                        root_element = Element {
+                            name: name.to_owned(),
+                            attributes: Vec::new(),
+                            nodes: Vec::new(),
+                        };
+                        //recursive function can return error
+                        match fill_element(&mut reader_iterator, &mut root_element) {
+                            Ok(()) => {}
+                            Err(err) => {
+                                return Err(err);
                             }
                         }
-                        _ => {
-                            //return error
-                            return Err("Error: xml must start with a root element.".to_owned());
-                        }
+                    }
+                    _ => {
+                        //return error
+                        return Err("Error: xml must start with a root element.".to_owned());
                     }
                 }
-                Err(error_msg)=>{
-                    // Err token
-                    return Err(error_msg.to_owned());
-                }
             }
-        } else {
-            //opt is None. Should be eof.
+            Err(error_msg) => {
+                // Err token
+                return Err(error_msg.to_owned());
+            }
         }
+    } else {
+        //opt is None. Should be eof.
+    }
     //return
     Ok(root_element)
 }
 
 /// recursive function to fill the tree with nodes
 /// returns Result only because of errors
-fn fill_element(reader_iterator: &mut ReaderForMicroXml, element: &mut Element) -> Result<(), String> {
-    loop{
+fn fill_element(
+    reader_iterator: &mut ReaderForMicroXml,
+    element: &mut Element,
+) -> Result<(), String> {
+    loop {
         if let Some(result_token) = reader_iterator.next() {
-            match result_token{
-                Ok(token)=>{
+            match result_token {
+                Ok(token) => {
                     match token {
                         Token::StartElement(name) => {
                             //make a child element and fill it (recursive)
@@ -143,10 +146,9 @@ fn fill_element(reader_iterator: &mut ReaderForMicroXml, element: &mut Element) 
                         }
                     }
                 }
-                Err(error_msg)=>return Err(error_msg.to_owned()),
+                Err(error_msg) => return Err(error_msg.to_owned()),
             }
-        }
-        else{
+        } else {
             println!("Token is None");
             break;
         }

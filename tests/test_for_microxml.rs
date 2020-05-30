@@ -7,7 +7,6 @@ fn read_xml_to_debug_string(reader_iterator: &mut ReaderForMicroXml) -> String {
     // the first option is used for the iterator to know where is the end
     // then the Result can have an Token or an Error
     for result_token in reader_iterator {
-        
         match result_token {
             Ok(token) => match token {
                 Token::StartElement(name) => {
