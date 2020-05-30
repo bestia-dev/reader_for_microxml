@@ -2,8 +2,7 @@
 
 [![crev_count](
 https://bestia.dev/cargo_crev_web/badge/crev_count/reader_for_microxml.svg
-)](https://bestia.dev/cargo_crev_web/crate/reader_for_microxml/) [![Lines of code](https://tokei.rs/b1/github/LucianoBestia/reader_for_microxml?category=code)](https://github.com/LucianoBestia/reader_for_microxml) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/actions/) 
-[![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)  
+)](https://bestia.dev/cargo_crev_web/crate/reader_for_microxml/) [![Lines of code](https://tokei.rs/b1/github/LucianoBestia/reader_for_microxml?category=code)](https://github.com/LucianoBestia/reader_for_microxml) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/actions/) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md) [![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml)  
 
 [comment]: # (lmake_readme cargo.toml data start)
 version: 1.1.6  date: 2020-05-29 authors: Luciano Bestia\
