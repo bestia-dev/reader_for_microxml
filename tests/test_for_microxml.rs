@@ -282,5 +282,6 @@ Start: "br"
 End: ""
 Text: "three"
 End: "html"
-"#);
-    }
+"#
+    );
+}

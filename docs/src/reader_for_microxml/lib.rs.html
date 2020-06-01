@@ -530,24 +530,32 @@
 <span id="530">530</span>
 <span id="531">531</span>
 <span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// region: lmake_readme include &quot;readme.md&quot; //! A</span>
 <span class="doccomment">//! # reader for microXml</span>
 <span class="doccomment">//! </span>
-<span class="doccomment">//! version: 1.1.6  date: 2020-05-29 authors: Luciano Bestia  </span>
+<span class="doccomment">//! [![crev reviews](</span>
+<span class="doccomment">//! https://bestia.dev/cargo_crev_web/badge/crev_count/reader_for_microxml.svg</span>
+<span class="doccomment">//! )](https://bestia.dev/cargo_crev_web/crate/reader_for_microxml/) [![Lines of code](https://tokei.rs/b1/github/LucianoBestia/reader_for_microxml?category=code)](https://github.com/LucianoBestia/reader_for_microxml) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/actions/) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md) [![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml)  </span>
+<span class="doccomment">//! </span>
+<span class="doccomment">//! version: 1.1.10  date: 2020-06-01 authors: Luciano Bestia  </span>
 <span class="doccomment">//! **reader for microXml - the simplified subset of xml**</span>
 <span class="doccomment">//! </span>
 <span class="doccomment">//! </span>
-<span class="doccomment">//! There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates in wasm.  </span>
+<span class="doccomment">//! There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates in wasm.\</span>
 <span class="doccomment">//! I found the existence of a standard (or W3C proposal) for *MicroXml* - dramatically simpler then the full Xml standard. Perfect for my use-case: I have small simple html files, that are microXml compatible.  </span>
 <span class="doccomment">//! </span>
 <span class="doccomment">//! ## microXml</span>
 <span class="doccomment">//! </span>
-<span class="doccomment">//! MicroXML is a subset of XML. It is dramatically simpler.  </span>
-<span class="doccomment">//! &lt;https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/&gt;  </span>
-<span class="doccomment">//! &lt;https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html&gt;  </span>
-<span class="doccomment">//! MicroXML is actually well-formed Xml.  </span>
-<span class="doccomment">//! In the data model of MicroXml there are no CData, namespaces, declarations, processing instructions,...  </span>
+<span class="doccomment">//! MicroXML is a subset of XML. It is dramatically simpler.\</span>
+<span class="doccomment">//! &lt;https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/&gt;\</span>
+<span class="doccomment">//! &lt;https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html&gt;\</span>
+<span class="doccomment">//! MicroXML is actually well-formed Xml.\</span>
+<span class="doccomment">//! In the data model of MicroXml there are no CData, namespaces, declarations, processing instructions,...\</span>
 <span class="doccomment">//! An example of all can be done in a well-formed microXml:  </span>
 <span class="doccomment">//! </span>
 <span class="doccomment">//! ```xml</span>
@@ -558,54 +566,54 @@
 <span class="doccomment">//! &lt;/memo&gt;</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//! </span>
-<span class="doccomment">//! MicroXml can be only in utf-8. I am lucky, because Rust Strings are internally utf-8 and are automatically checked for correctness.  </span>
-<span class="doccomment">//! MicroXml should go through normalization: CR &amp; CRLF should be converted to LF, but I don&#39;t do that here. Also decoding xml control characters &amp;quot;, &amp;amp;,... or decoding unicode encodings like &amp;#xE343; , &amp;#xE312;,... is not inside the reader. This is left for a higher library to choose what to do with it.  </span>
-<span class="doccomment">//! MicroXml can contain Comments, but they are not official microXml data. But I need them for my templating project.  </span>
-<span class="doccomment">//! Whitespaces are completely preserved in Text Nodes. For me they are significant. Also newline and Tabs. This is different from full Xml whitespace processing.  </span>
+<span class="doccomment">//! MicroXml can be only in utf-8. I am lucky, because Rust Strings are internally utf-8 and are automatically checked for correctness.\</span>
+<span class="doccomment">//! MicroXml should go through normalization: CR &amp; CRLF should be converted to LF, but I don&#39;t do that here. Also decoding xml control characters &amp;quot;, &amp;amp;,... or decoding unicode encodings like &amp;#xE343; , &amp;#xE312;,... is not inside the reader. This is left for a higher library to choose what to do with it.\</span>
+<span class="doccomment">//! MicroXml can contain Comments, but they are not official microXml data. But I need them for my templating project.\</span>
+<span class="doccomment">//! Whitespaces are completely preserved in Text Nodes. For me they are significant. Also newline and Tabs. This is different from full Xml whitespace processing.\</span>
 <span class="doccomment">//! All other whitespaces are ignored - they are insignificant.  </span>
 <span class="doccomment">//! </span>
 <span class="doccomment">//! ## reader</span>
 <span class="doccomment">//! </span>
-<span class="doccomment">//! This ReaderForMicroXml obviously cannot read a complicated full XML.  </span>
-<span class="doccomment">//! This `reader_for_microxml` is used for small html fragments.  </span>
-<span class="doccomment">//! They must be well-formed microXml.  </span>
-<span class="doccomment">//! This fragments are meant for a html templating for dodrio.  </span>
-<span class="doccomment">//! Because of the small size of fragments, I can put all the text in memory in a string.  </span>
-<span class="doccomment">//! Only basic mal-formed incorrectness produce errors. I am not trying to return errors for all the possible mal-formed incorrectness in microXml.  </span>
-<span class="doccomment">//! The speed is not really important, but the size of the code is, because it will be used in WebAssembly. Every code is too big for Wasm!  </span>
+<span class="doccomment">//! This ReaderForMicroXml obviously cannot read a complicated full XML.\</span>
+<span class="doccomment">//! This `reader_for_microxml` is used for small html fragments.\</span>
+<span class="doccomment">//! They must be well-formed microXml.\</span>
+<span class="doccomment">//! This fragments are meant for a html templating for dodrio.\</span>
+<span class="doccomment">//! Because of the small size of fragments, I can put all the text in memory in a string.\</span>
+<span class="doccomment">//! Only basic mal-formed incorrectness produce errors. I am not trying to return errors for all the possible mal-formed incorrectness in microXml.\</span>
+<span class="doccomment">//! The speed is not really important, but the size of the code is, because it will be used in WebAssembly. Every code is too big for Wasm!\</span>
 <span class="doccomment">//! The crate has `#![no_std]`, NO dependencies, NO allocations, .  </span>
 <span class="doccomment">//! </span>
 <span class="doccomment">//! ## iterator</span>
 <span class="doccomment">//! </span>
-<span class="doccomment">//! The reader is an iterator.  </span>
-<span class="doccomment">//! It implements the trait of the iterator.  </span>
-<span class="doccomment">//! Use this syntax to process all tokens:  </span>
-<span class="doccomment">//! `for result_token in reader_iterator {`  </span>
-<span class="doccomment">//! or  </span>
+<span class="doccomment">//! The reader is an iterator.\</span>
+<span class="doccomment">//! It implements the trait of the iterator.\</span>
+<span class="doccomment">//! Use this syntax to process all tokens:\</span>
+<span class="doccomment">//! `for result_token in reader_iterator {`\</span>
+<span class="doccomment">//! or\</span>
 <span class="doccomment">//! `let x: Option&lt;Result&lt;Token, &amp;str&gt;&gt; = reader_iterator.next();`  </span>
 <span class="doccomment">//! </span>
 <span class="doccomment">//! ## Possible enhancements</span>
 <span class="doccomment">//! </span>
 <span class="doccomment">//! ### Speed</span>
 <span class="doccomment">//! </span>
-<span class="doccomment">//! The speed could probably be improved if I use Vec\&lt;u8\&gt; instead of CharIndices. That could work because all the xml delimiters are ASCII characters. The specifics of the UTF-8 encoding is that ASCII characters can in no way be misinterpreted inside a string. They always have the first bit set to 0.  </span>
-<span class="doccomment">//! All other unicode characters are multi-byte and all this bytes MUST start with bit 1.  </span>
-<span class="doccomment">//! So there is no way of having them confused.  </span>
-<span class="doccomment">//! &lt;https://betterexplained.com/articles/unicode/&gt;  </span>
+<span class="doccomment">//! The speed could probably be improved if I use Vec\&lt;u8\&gt; instead of CharIndices. That could work because all the xml delimiters are ASCII characters. The specifics of the UTF-8 encoding is that ASCII characters can in no way be misinterpreted inside a string. They always have the first bit set to 0.\</span>
+<span class="doccomment">//! All other unicode characters are multi-byte and all this bytes MUST start with bit 1.\</span>
+<span class="doccomment">//! So there is no way of having them confused.\</span>
+<span class="doccomment">//! &lt;https://betterexplained.com/articles/unicode/&gt;\</span>
 <span class="doccomment">//! &lt;https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/&gt;  </span>
 <span class="doccomment">//! </span>
 <span class="doccomment">//! ## Tests</span>
 <span class="doccomment">//! </span>
-<span class="doccomment">//! Run the tests with:  </span>
-<span class="doccomment">//! `clear; cargo make test`  </span>
+<span class="doccomment">//! Run the tests with:\</span>
+<span class="doccomment">//! `clear; cargo make test`</span>
 <span class="doccomment">//! </span>
 <span class="doccomment">//! ## Examples</span>
 <span class="doccomment">//! </span>
-<span class="doccomment">//! Find examples in the repository on github.  </span>
-<span class="doccomment">//! Run them with:</span>
-<span class="doccomment">//! `clear; cargo make run_rel1`  </span>
-<span class="doccomment">//! `clear; cargo make run_rel2`  </span>
-<span class="doccomment">//! it is a shortcut to:  </span>
+<span class="doccomment">//! Find examples in the repository on github.\</span>
+<span class="doccomment">//! Run them with:  </span>
+<span class="doccomment">//! `clear; cargo make run_rel1`\</span>
+<span class="doccomment">//! `clear; cargo make run_rel2`\</span>
+<span class="doccomment">//! it is a shortcut to:\</span>
 <span class="doccomment">//! `cargo run --example microxml_tree examples/t2.html`</span>
 <span class="doccomment">//! </span>
 <span class="doccomment">//! ```rust</span>
@@ -655,17 +663,17 @@
 <span class="doccomment">//! </span>
 <span class="doccomment">//! ## cargo crev reviews and advisory</span>
 <span class="doccomment">//! </span>
-<span class="doccomment">//! It is recommended to always use [cargo-crev](https://github.com/crev-dev/cargo-crev)  </span>
-<span class="doccomment">//! to verify the trustworthiness of each of your dependencies.  </span>
-<span class="doccomment">//! Please, spread this info.  </span>
-<span class="doccomment">//! On the web use this url to read crate reviews. Example:  </span>
+<span class="doccomment">//! It is recommended to always use [cargo-crev](https://github.com/crev-dev/cargo-crev)\</span>
+<span class="doccomment">//! to verify the trustworthiness of each of your dependencies.\</span>
+<span class="doccomment">//! Please, spread this info.\</span>
+<span class="doccomment">//! On the web use this url to read crate reviews. Example:\</span>
 <span class="doccomment">//! &lt;https://bestia.dev/cargo_crev_web/query/num-traits&gt;  </span>
 <span class="doccomment">//! </span>
 <span class="doccomment">//! ## References</span>
 <span class="doccomment">//! </span>
-<span class="doccomment">//! &lt;https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html&gt;  </span>
-<span class="doccomment">//! &lt;https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/&gt;  </span>
-<span class="doccomment">//! &lt;https://github.com/tafia/quick-xml&gt;  </span>
+<span class="doccomment">//! &lt;https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html&gt;\</span>
+<span class="doccomment">//! &lt;https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/&gt;\</span>
+<span class="doccomment">//! &lt;https://github.com/tafia/quick-xml&gt;\</span>
 <span class="doccomment">//! &lt;https://github.com/RazrFalcon/roxmltree&gt;  </span>
 <span class="comment">// endregion: lmake_readme include &quot;readme.md&quot; //! A</span>
 
@@ -796,28 +804,29 @@
                 <span class="comment">// InsideOfTag (after name) can be &gt; or attributes or self_closing</span>
                 <span class="comment">// &lt; xxx &gt;,  &lt; xxx attr=&quot;val&quot; &gt;,  &lt; xxx /&gt;</span>
                 <span class="comment">// if it is not self-closing or &gt; then must be an attribute</span>
-                <span class="kw">if</span> <span class="op">!</span>(<span class="self">self</span>.<span class="ident">last_char</span>.<span class="ident">ch</span> <span class="op">=</span><span class="op">=</span> <span class="string">&#39;/&#39;</span> <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">last_char</span>.<span class="ident">ch</span> <span class="op">=</span><span class="op">=</span> <span class="string">&#39;&gt;&#39;</span>) {
-                    <span class="comment">// attribute</span>
-                    <span class="self">self</span>.<span class="ident">read_attribute</span>()
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">last_char</span>.<span class="ident">ch</span> <span class="op">=</span><span class="op">=</span> <span class="string">&#39;/&#39;</span> {
-                    <span class="comment">// self-closing element</span>
-                    <span class="self">self</span>.<span class="ident">move_next_char</span>()<span class="question-mark">?</span>; <span class="comment">// to &gt;</span>
-                    <span class="self">self</span>.<span class="ident">move_over_whitespaces</span>()<span class="question-mark">?</span>;
-                    <span class="kw">if</span> <span class="self">self</span>.<span class="ident">last_char</span>.<span class="ident">ch</span> <span class="op">!</span><span class="op">=</span> <span class="string">&#39;&gt;&#39;</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="string">&quot;Error: Tag has / but not /&gt;&quot;</span>));
-                    } <span class="kw">else</span> {
-                        <span class="self">self</span>.<span class="ident">tag_state</span> <span class="op">=</span> <span class="ident">TagState</span>::<span class="ident">OutsideOfTag</span>;
-                        <span class="self">self</span>.<span class="ident">move_next_char</span>()<span class="question-mark">?</span>;
-                        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">Token</span>::<span class="ident">EndElement</span>(<span class="string">&quot;&quot;</span>)));
-                    }
-                } <span class="kw">else</span> {
+                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">last_char</span>.<span class="ident">ch</span> <span class="op">=</span><span class="op">=</span> <span class="string">&#39;&gt;&#39;</span> {
                     <span class="comment">// here must be the end of start tag &gt;</span>
                     <span class="self">self</span>.<span class="ident">move_next_char</span>()<span class="question-mark">?</span>;
                     <span class="self">self</span>.<span class="ident">tag_state</span> <span class="op">=</span> <span class="ident">TagState</span>::<span class="ident">OutsideOfTag</span>;
                     <span class="self">self</span>.<span class="ident">start_of_text_node_before_whitespace</span> <span class="op">=</span> <span class="number">0</span>;
                     <span class="comment">// recursive calling</span>
                     <span class="kw">return</span> <span class="self">self</span>.<span class="ident">read_token_internal</span>();
-                }
+                }<span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">last_char</span>.<span class="ident">ch</span> <span class="op">=</span><span class="op">=</span> <span class="string">&#39;/&#39;</span> {
+                    <span class="comment">// self-closing element</span>
+                    <span class="self">self</span>.<span class="ident">move_next_char</span>()<span class="question-mark">?</span>; <span class="comment">// to &gt;</span>
+                    <span class="self">self</span>.<span class="ident">move_over_whitespaces</span>()<span class="question-mark">?</span>;
+                    <span class="kw">if</span> <span class="self">self</span>.<span class="ident">last_char</span>.<span class="ident">ch</span> <span class="op">!</span><span class="op">=</span> <span class="string">&#39;&gt;&#39;</span> {
+                        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="string">&quot;Error: Tag has / but not /&gt;&quot;</span>));
+                    } <span class="kw">else</span> {
+                        <span class="self">self</span>.<span class="ident">move_next_char</span>()<span class="question-mark">?</span>;
+                        <span class="self">self</span>.<span class="ident">tag_state</span> <span class="op">=</span> <span class="ident">TagState</span>::<span class="ident">OutsideOfTag</span>;
+                        <span class="self">self</span>.<span class="ident">start_of_text_node_before_whitespace</span> <span class="op">=</span> <span class="number">0</span>;
+                        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">Token</span>::<span class="ident">EndElement</span>(<span class="string">&quot;&quot;</span>)));
+                    }
+                }<span class="kw">else</span>{
+                    <span class="comment">// attribute</span>
+                    <span class="self">self</span>.<span class="ident">read_attribute</span>()
+                }  
             }
             <span class="ident">TagState</span>::<span class="ident">EndOfFile</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="comment">//return None to stop the iterator</span>
@@ -1057,7 +1066,6 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">ReaderForMicroXml</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span>;
     <span class="doccomment">/// Reads the next token: StartElement, Attribute, Text, EndElement  </span>
-    <span class="doccomment">/// TODO: how to add a Result and and error. How to catch panic and return error.</span>
     <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="comment">// return</span>
         <span class="self">self</span>.<span class="ident">read_token_internal</span>()
