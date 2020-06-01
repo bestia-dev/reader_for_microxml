@@ -264,3 +264,23 @@ End: "html"
 "#
     );
 }
+
+#[test]
+/// self-closing elements
+fn test_08() {
+    let str_xml = r#"<html>one<br />two<br/>three</html>"#;
+    let mut reader_iterator = ReaderForMicroXml::new(str_xml);
+    let result = read_xml_to_debug_string(&mut reader_iterator);
+    assert_eq!(
+        result,
+        r#"Start: "html"
+Text: "one"
+Start: "br"
+End: ""
+Text: "two"
+Start: "br"
+End: ""
+Text: "three"
+End: "html"
+"#);
+    }

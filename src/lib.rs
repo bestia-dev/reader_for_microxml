@@ -263,28 +263,29 @@ impl<'a> ReaderForMicroXml<'a> {
                 // InsideOfTag (after name) can be > or attributes or self_closing
                 // < xxx >,  < xxx attr="val" >,  < xxx />
                 // if it is not self-closing or > then must be an attribute
-                if !(self.last_char.ch == '/' || self.last_char.ch == '>') {
-                    // attribute
-                    self.read_attribute()
-                } else if self.last_char.ch == '/' {
-                    // self-closing element
-                    self.move_next_char()?; // to >
-                    self.move_over_whitespaces()?;
-                    if self.last_char.ch != '>' {
-                        return Some(Err("Error: Tag has / but not />"));
-                    } else {
-                        self.tag_state = TagState::OutsideOfTag;
-                        self.move_next_char()?;
-                        return Some(Ok(Token::EndElement("")));
-                    }
-                } else {
+                if self.last_char.ch == '>' {
                     // here must be the end of start tag >
                     self.move_next_char()?;
                     self.tag_state = TagState::OutsideOfTag;
                     self.start_of_text_node_before_whitespace = 0;
                     // recursive calling
                     return self.read_token_internal();
-                }
+                }else if self.last_char.ch == '/' {
+                    // self-closing element
+                    self.move_next_char()?; // to >
+                    self.move_over_whitespaces()?;
+                    if self.last_char.ch != '>' {
+                        return Some(Err("Error: Tag has / but not />"));
+                    } else {
+                        self.move_next_char()?;
+                        self.tag_state = TagState::OutsideOfTag;
+                        self.start_of_text_node_before_whitespace = 0;
+                        return Some(Ok(Token::EndElement("")));
+                    }
+                }else{
+                    // attribute
+                    self.read_attribute()
+                }  
             }
             TagState::EndOfFile => {
                 //return None to stop the iterator
@@ -524,7 +525,6 @@ impl<'a> ReaderForMicroXml<'a> {
 impl<'a> Iterator for ReaderForMicroXml<'a> {
     type Item = Result<Token<'a>, &'static str>;
     /// Reads the next token: StartElement, Attribute, Text, EndElement  
-    /// TODO: how to add a Result and and error. How to catch panic and return error.
     fn next(&mut self) -> Option<Result<Token<'a>, &'static str>> {
         // return
         self.read_token_internal()

@@ -1,6 +1,6 @@
 # reader for microXml
 
-[![crev_count](
+[![crev reviews](
 https://bestia.dev/cargo_crev_web/badge/crev_count/reader_for_microxml.svg
 )](https://bestia.dev/cargo_crev_web/crate/reader_for_microxml/) [![Lines of code](https://tokei.rs/b1/github/LucianoBestia/reader_for_microxml?category=code)](https://github.com/LucianoBestia/reader_for_microxml) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/actions/) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md) [![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml)  
 
