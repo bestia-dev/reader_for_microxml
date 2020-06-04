@@ -2,8 +2,8 @@
 //! # reader for microXml
 //!
 //! [![crev reviews](
-//! https://bestia.dev/cargo_crev_web/badge/crev_count/reader_for_microxml.svg
-//! )](https://bestia.dev/cargo_crev_web/crate/reader_for_microxml/) [![Lines of code](https://tokei.rs/b1/github/LucianoBestia/reader_for_microxml?category=code)](https://github.com/LucianoBestia/reader_for_microxml) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/actions/) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md) [![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml)  
+//! https://web.crev.dev/rust-reviews/badge/crev_count/reader_for_microxml.svg
+//! )](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/) [![Lines of code](https://tokei.rs/b1/github/LucianoBestia/reader_for_microxml?category=code)](https://github.com/LucianoBestia/reader_for_microxml) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/actions/) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md) [![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml)  
 //!
 //! version: 1.1.10  date: 2020-06-01 authors: Luciano Bestia  
 //! **reader for microXml - the simplified subset of xml**
@@ -130,7 +130,7 @@
 //! to verify the trustworthiness of each of your dependencies.\
 //! Please, spread this info.\
 //! On the web use this url to read crate reviews. Example:\
-//! <https://bestia.dev/cargo_crev_web/query/num-traits>  
+//! <https://web.crev.dev/rust-reviews/crate/num-traits>  
 //!
 //! ## References
 //!
