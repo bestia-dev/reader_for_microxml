@@ -2,5 +2,5 @@
 # It is not intended for manual editing.
 [[package]]
 name = "reader_for_microxml"
-version = "1.1.10"
+version = "1.1.11"
 
