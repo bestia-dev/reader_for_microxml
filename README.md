@@ -2,7 +2,7 @@
 
 [![crev reviews](
 https://web.crev.dev/rust-reviews/badge/crev_count/reader_for_microxml.svg
-)](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/) [![Rust lines](https://img.shields.io/badge/Rust_lines-308-green.svg)](https://img.shields.io) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LucianoBestia/reader_for_microxml/blob/master/LICENSE) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/actions/) [![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml) [![Documentation](https://docs.rs/reader_for_microxml/badge.svg)](https://docs.rs/reader_for_microxml/)  
+)](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/) [![Rust lines](https://img.shields.io/badge/Rust_lines-308-green.svg)](https://github.com/LucianoBestia/reader_for_microxml) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LucianoBestia/reader_for_microxml/blob/master/LICENSE) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/) [![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml) [![Documentation](https://docs.rs/reader_for_microxml/badge.svg)](https://docs.rs/reader_for_microxml/)  
 
 [comment]: # (lmake_readme cargo.toml data start)
 version: 1.1.10  date: 2020-06-01 authors: Luciano Bestia  
