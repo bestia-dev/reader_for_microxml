@@ -251,8 +251,8 @@ clear = true
 private = true
 description = "copy doc folder as docs (out of folder target), so it can be git comitted"
 script = [
-    "echo $ \\rsync -avz --delete-after target/doc/*  docs/",
-    "\\rsync -avz --delete-after target/doc/*  docs/",
+    "echo $ \\rsync -a --info=progress2 --delete-after target/doc/*  docs/",
+    "\\rsync -a --info=progress2 --delete-after target/doc/*  docs/",
     "echo after successful doc, run cargo make fmt msg_for_commit",
 ]
 
