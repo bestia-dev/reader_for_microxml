@@ -3,9 +3,9 @@
 //!
 //! [![crev reviews](
 //! https://web.crev.dev/rust-reviews/badge/crev_count/reader_for_microxml.svg
-//! )](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/) [![Lines of code](https://tokei.rs/b1/github/LucianoBestia/reader_for_microxml?category=code)](https://github.com/LucianoBestia/reader_for_microxml) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/actions/) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md) [![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml)  
+//! )](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/) [![Rust lines](https://img.shields.io/badge/Rust_lines-308-green.svg)](https://github.com/LucianoBestia/reader_for_microxml) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LucianoBestia/reader_for_microxml/blob/master/LICENSE) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/) [![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml) [![Documentation](https://docs.rs/reader_for_microxml/badge.svg)](https://docs.rs/reader_for_microxml/)  
 //!
-//! version: 1.1.10  date: 2020-06-01 authors: Luciano Bestia  
+//! ***version: 1.1.12  date: 2020-06-15 authors: Luciano Bestia***  
 //! **reader for microXml - the simplified subset of xml**
 //!
 //!
@@ -30,7 +30,7 @@
 //! ```
 //!
 //! MicroXml can be only in utf-8. I am lucky, because Rust Strings are internally utf-8 and are automatically checked for correctness.\
-//! MicroXml should go through normalization: CR & CRLF should be converted to LF, but I don't do that here. Also decoding xml control characters &quot;, &amp;,... or decoding unicode encodings like &#xE343; , &#xE312;,... is not inside the reader. This is left for a higher library to choose what to do with it.\
+//! MicroXml should go through normalization: CR & CRLF should be converted to LF, but I don't do that here. Also decoding xml control characters `&quot;`, `&amp;`,... or decoding unicode encodings like `&#xE343;` , `&#xE312;`,... is not inside the reader. This is left for a higher library to choose what to do with it.\
 //! MicroXml can contain Comments, but they are not official microXml data. But I need them for my templating project.\
 //! Whitespaces are completely preserved in Text Nodes. For me they are significant. Also newline and Tabs. This is different from full Xml whitespace processing.\
 //! All other whitespaces are ignored - they are insignificant.  
@@ -44,7 +44,7 @@
 //! Because of the small size of fragments, I can put all the text in memory in a string.\
 //! Only basic mal-formed incorrectness produce errors. I am not trying to return errors for all the possible mal-formed incorrectness in microXml.\
 //! The speed is not really important, but the size of the code is, because it will be used in WebAssembly. Every code is too big for Wasm!\
-//! The crate has `#![no_std]`, NO dependencies, NO allocations, .  
+//! The crate has `#![no_std]`, #![forbid(unsafe_code)], NO dependencies, NO allocations,  
 //!
 //! ## iterator
 //!
@@ -55,19 +55,9 @@
 //! or\
 //! `let x: Option<Result<Token, &str>> = reader_iterator.next();`  
 //!
-//! ## Possible enhancements
-//!
-//! ### Speed
-//!
-//! The speed could probably be improved if I use Vec\<u8\> instead of CharIndices. That could work because all the xml delimiters are ASCII characters. The specifics of the UTF-8 encoding is that ASCII characters can in no way be misinterpreted inside a string. They always have the first bit set to 0.\
-//! All other unicode characters are multi-byte and all this bytes MUST start with bit 1.\
-//! So there is no way of having them confused.\
-//! <https://betterexplained.com/articles/unicode/>\
-//! <https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/>  
-//!
 //! ## Tests
 //!
-//! Run the tests with:\
+//! Run 16 tests with:\
 //! `clear; cargo make test`
 //!
 //! ## Examples
@@ -124,6 +114,12 @@
 //! }
 //! ```
 //!
+//! ## used in projects
+//!
+//! <https://github.com/LucianoBestia/cargo_crev_web>  
+//! <https://github.com/LucianoBestia/dodrio_templating>  
+//! <https://github.com/LucianoBestia/mem6_game>  
+//!
 //! ## cargo crev reviews and advisory
 //!
 //! It is recommended to always use [cargo-crev](https://github.com/crev-dev/cargo-crev)\
@@ -131,6 +127,16 @@
 //! Please, spread this info.\
 //! On the web use this url to read crate reviews. Example:\
 //! <https://web.crev.dev/rust-reviews/crate/num-traits>  
+//!
+//! ## Ideas for the future
+//!
+//! ### Speed
+//!
+//! The speed could probably be improved if I use Vec\<u8\> instead of CharIndices. That could work because all the xml delimiters are ASCII characters. The specifics of the UTF-8 encoding is that ASCII characters can in no way be misinterpreted inside a string. They always have the first bit set to 0.\
+//! All other unicode characters are multi-byte and all this bytes MUST start with bit 1.\
+//! So there is no way of having them confused.\
+//! <https://betterexplained.com/articles/unicode/>\
+//! <https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/>  
 //!
 //! ## References
 //!
@@ -141,6 +147,7 @@
 // endregion: lmake_readme include "readme.md" //! A
 
 #![no_std]
+#![forbid(unsafe_code)]
 
 pub struct PosChar {
     pub pos: usize,

@@ -5,7 +5,7 @@ https://web.crev.dev/rust-reviews/badge/crev_count/reader_for_microxml.svg
 )](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/) [![Rust lines](https://img.shields.io/badge/Rust_lines-308-green.svg)](https://github.com/LucianoBestia/reader_for_microxml) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LucianoBestia/reader_for_microxml/blob/master/LICENSE) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/) [![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml) [![Documentation](https://docs.rs/reader_for_microxml/badge.svg)](https://docs.rs/reader_for_microxml/)  
 
 [comment]: # (lmake_readme cargo.toml data start)
-version: 1.1.10  date: 2020-06-01 authors: Luciano Bestia  
+***version: 1.1.12  date: 2020-06-15 authors: Luciano Bestia***  
 **reader for microXml - the simplified subset of xml**
 
 [comment]: # (lmake_readme cargo.toml data end)
@@ -45,7 +45,7 @@ This fragments are meant for a html templating for dodrio.\
 Because of the small size of fragments, I can put all the text in memory in a string.\
 Only basic mal-formed incorrectness produce errors. I am not trying to return errors for all the possible mal-formed incorrectness in microXml.\
 The speed is not really important, but the size of the code is, because it will be used in WebAssembly. Every code is too big for Wasm!\
-The crate has `#![no_std]`, NO dependencies, NO allocations, NO unsafe   
+The crate has `#![no_std]`, #![forbid(unsafe_code)], NO dependencies, NO allocations,  
 
 ## iterator
 
