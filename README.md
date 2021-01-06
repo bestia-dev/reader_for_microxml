@@ -10,6 +10,10 @@ https://web.crev.dev/rust-reviews/badge/crev_count/reader_for_microxml.svg
 
 [comment]: # (lmake_readme cargo.toml data end)
 
+[comment]: # (lmake_lines_of_code start)
+
+[comment]: # (lmake_lines_of_code end)
+
 There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates in wasm.\
 I found the existence of a standard (or W3C proposal) for *MicroXml* - dramatically simpler then the full Xml standard. Perfect for my use-case: I have small simple html files, that are microXml compatible.  
 
@@ -59,14 +63,14 @@ or\
 ## Tests
 
 Run 16 tests with:\
-`clear; cargo make test`
+`cargo make test`
 
 ## Examples
 
 Find examples in the repository on github.\
 Run them with:  
-`clear; cargo make run_rel1`\
-`clear; cargo make run_rel2`\
+`cargo make run_rel1`\
+`cargo make run_rel2`\
 it is a shortcut to:\
 `cargo run --example microxml_tree examples/t2.html`
 

@@ -487,7 +487,8 @@ impl<'a> ReaderForMicroXml<'a> {
                 self.move_next_char()?;
             }
         }
-        self.move_over_whitespaces()?;
+        // it is possible to have a comment in between 2 text nodes
+        self.start_of_text_node_before_whitespace = 0;
         self.tag_state = TagState::OutsideOfTag;
         // unwrap because I am confident that start_pos or end_pos are correct
         return Some(Ok(Token::Comment(

@@ -1,4 +1,4 @@
-name: Rust
+name: RustAction
 
 on:
   push:
@@ -10,13 +10,15 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  fmt_build_test:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
+    - name: Fmt
+      run: cargo fmt -- --check
     - name: Build
-      run: cargo build --verbose
+      run: cargo build
     - name: Run tests
-      run: cargo test --verbose
+      run: cargo test
