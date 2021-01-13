@@ -1,5 +1,5 @@
 # reader_for_microxml/Makefile.toml
-# https://github.com/sagiegurari/cargo-make/blob/master/src/lib/Makefile.stable.toml
+# https://github.com/sagiegurari/cargo-make
 
 [config]
 skip_core_tasks = true
