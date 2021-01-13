@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["reader_for_microxml"] = [{"text":"impl&lt;'a&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html\" title=\"trait core::clone::Clone\">Clone</a> for <a class=\"enum\" href=\"reader_for_microxml/enum.Token.html\" title=\"enum reader_for_microxml::Token\">Token</a>&lt;'a&gt;","synthetic":false,"types":["reader_for_microxml::Token"]}];
+implementors["reader_for_microxml"] = [{"text":"impl&lt;'a&gt; Clone for Token&lt;'a&gt;","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

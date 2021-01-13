@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["reader_for_microxml"] = [{"text":"impl&lt;'a&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html\" title=\"trait core::iter::traits::iterator::Iterator\">Iterator</a> for <a class=\"struct\" href=\"reader_for_microxml/struct.ReaderForMicroXml.html\" title=\"struct reader_for_microxml::ReaderForMicroXml\">ReaderForMicroXml</a>&lt;'a&gt;","synthetic":false,"types":["reader_for_microxml::ReaderForMicroXml"]}];
+implementors["reader_for_microxml"] = [{"text":"impl&lt;'a&gt; Iterator for ReaderForMicroXml&lt;'a&gt;","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,18 +1,25 @@
+[comment]: # (lmake_md_to_doc_comments segment start A)
 # reader for microXml
 
-[![crev reviews](
-https://web.crev.dev/rust-reviews/badge/crev_count/reader_for_microxml.svg
-)](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/) [![Rust lines](https://img.shields.io/badge/Rust_lines-308-green.svg)](https://github.com/LucianoBestia/reader_for_microxml) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LucianoBestia/reader_for_microxml/blob/master/LICENSE) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/) [![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml) [![Documentation](https://docs.rs/reader_for_microxml/badge.svg)](https://docs.rs/reader_for_microxml/)  
+[comment]: # (lmake_cargo_toml_to_md start)
 
-[comment]: # (lmake_readme cargo.toml data start)
-***version: 1.1.12  date: 2020-06-15 authors: Luciano Bestia***  
-**reader for microXml - the simplified subset of xml**
+**reader for microXml - the simplified subset of xml**  
+***[repo](https://github.com/LucianoBestia/reader_for_microxml); version: 2.0.2  date: 2021-01-13 authors: Luciano Bestia***  
 
-[comment]: # (lmake_readme cargo.toml data end)
+[comment]: # (lmake_cargo_toml_to_md end)
+
+[![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LucianoBestia/reader_for_microxml/blob/master/LICENSE) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/) [![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml) [![Documentation](https://docs.rs/reader_for_microxml/badge.svg)](https://docs.rs/reader_for_microxml/) [![crev reviews](https://web.crev.dev/rust-reviews/badge/crev_count/reader_for_microxml.svg)](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/)
 
 [comment]: # (lmake_lines_of_code start)
+[![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-278-green.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
+[![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-206-blue.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
+[![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-64-purple.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
+[![Lines in examples](https://img.shields.io/badge/Lines_in_examples-222-yellow.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
+[![Lines in tests](https://img.shields.io/badge/Lines_in_tests-287-orange.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
 
 [comment]: # (lmake_lines_of_code end)
+
+
 
 There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates in wasm.\
 I found the existence of a standard (or W3C proposal) for *MicroXml* - dramatically simpler then the full Xml standard. Perfect for my use-case: I have small simple html files, that are microXml compatible.  
@@ -149,3 +156,5 @@ So there is no way of having them confused.\
 <https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/>\
 <https://github.com/tafia/quick-xml>\
 <https://github.com/RazrFalcon/roxmltree>  
+
+[comment]: # (lmake_md_to_doc_comments segment end A)

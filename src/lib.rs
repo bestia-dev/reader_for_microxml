@@ -1,12 +1,17 @@
-// region: lmake_readme include "readme.md" //! A
+// region: lmake_md_to_doc_comments include README.md A //!
 //! # reader for microXml
 //!
-//! [![crev reviews](
-//! https://web.crev.dev/rust-reviews/badge/crev_count/reader_for_microxml.svg
-//! )](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/) [![Rust lines](https://img.shields.io/badge/Rust_lines-308-green.svg)](https://github.com/LucianoBestia/reader_for_microxml) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LucianoBestia/reader_for_microxml/blob/master/LICENSE) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/) [![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml) [![Documentation](https://docs.rs/reader_for_microxml/badge.svg)](https://docs.rs/reader_for_microxml/)  
+//! **reader for microXml - the simplified subset of xml**  
+//! ***[repo](https://github.com/LucianoBestia/reader_for_microxml); version: 2.0.2  date: 2021-01-13 authors: Luciano Bestia***  
 //!
-//! ***version: 1.1.12  date: 2020-06-15 authors: Luciano Bestia***  
-//! **reader for microXml - the simplified subset of xml**
+//! [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LucianoBestia/reader_for_microxml/blob/master/LICENSE) [![Rust](https://github.com/LucianoBestia/reader_for_microxml/workflows/Rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/) [![crates.io](https://meritbadge.herokuapp.com/reader_for_microxml)](https://crates.io/crates/reader_for_microxml) [![Documentation](https://docs.rs/reader_for_microxml/badge.svg)](https://docs.rs/reader_for_microxml/) [![crev reviews](https://web.crev.dev/rust-reviews/badge/crev_count/reader_for_microxml.svg)](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/)
+//!
+//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-278-green.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
+//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-206-blue.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
+//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-64-purple.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
+//! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-222-yellow.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
+//! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-287-orange.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
+//!
 //!
 //!
 //! There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates in wasm.\
@@ -58,14 +63,14 @@
 //! ## Tests
 //!
 //! Run 16 tests with:\
-//! `clear; cargo make test`
+//! `cargo make test`
 //!
 //! ## Examples
 //!
 //! Find examples in the repository on github.\
 //! Run them with:  
-//! `clear; cargo make run_rel1`\
-//! `clear; cargo make run_rel2`\
+//! `cargo make run_rel1`\
+//! `cargo make run_rel2`\
 //! it is a shortcut to:\
 //! `cargo run --example microxml_tree examples/t2.html`
 //!
@@ -144,7 +149,8 @@
 //! <https://www.xml.com/articles/2017/06/03/simplifying-xml-microxml/>\
 //! <https://github.com/tafia/quick-xml>\
 //! <https://github.com/RazrFalcon/roxmltree>  
-// endregion: lmake_readme include "readme.md" //! A
+//!
+// endregion: lmake_md_to_doc_comments include README.md A //!
 
 #![no_std]
 #![forbid(unsafe_code)]
