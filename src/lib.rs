@@ -2,15 +2,15 @@
 //! # reader for microXml
 //!
 //! **reader for microXml - the simplified subset of xml**  
-//! ***[repo](https://github.com/LucianoBestia/reader_for_microxml); version: 2.0.2  date: 2021-01-13 authors: Luciano Bestia***  
+//! ***[repo](https://github.com/bestia-dev/reader_for_microxml); version: 2.0.2  date: 2021-01-13 authors: bestia.dev***  
 //!
-//!  [![crates.io](https://img.shields.io/crates/v/reader_for_microxml.svg)](https://crates.io/crates/reader_for_microxml) [![Documentation](https://docs.rs/reader_for_microxml/badge.svg)](https://docs.rs/reader_for_microxml/) [![crev reviews](https://web.crev.dev/rust-reviews/badge/crev_count/reader_for_microxml.svg)](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/) [![RustActions](https://github.com/LucianoBestia/reader_for_microxml/workflows/rust/badge.svg)](https://github.com/LucianoBestia/reader_for_microxml/) [![latest doc](https://img.shields.io/badge/latest_docs-GitHub-orange.svg)](https://lucianobestia.github.io/reader_for_microxml/reader_for_microxml/index.html) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LucianoBestia/reader_for_microxml/blob/main/LICENSE)
+//!  [![crates.io](https://img.shields.io/crates/v/reader_for_microxml.svg)](https://crates.io/crates/reader_for_microxml) [![Documentation](https://docs.rs/reader_for_microxml/badge.svg)](https://docs.rs/reader_for_microxml/) [![crev reviews](https://web.crev.dev/rust-reviews/badge/crev_count/reader_for_microxml.svg)](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/) [![RustActions](https://github.com/bestia-dev/reader_for_microxml/workflows/rust/badge.svg)](https://github.com/bestia-dev/reader_for_microxml/) [![latest doc](https://img.shields.io/badge/latest_docs-GitHub-orange.svg)](https://bestia-dev.github.io/reader_for_microxml/reader_for_microxml/index.html) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bestia-dev/reader_for_microxml/blob/main/LICENSE)
 //!
-//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-278-green.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
-//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-208-blue.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
-//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-64-purple.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
-//! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-222-yellow.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
-//! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-287-orange.svg)](https://github.com/LucianoBestia/reader_for_microxml/)
+//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-278-green.svg)](https://github.com/bestia-dev/reader_for_microxml/)
+//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-208-blue.svg)](https://github.com/bestia-dev/reader_for_microxml/)
+//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-64-purple.svg)](https://github.com/bestia-dev/reader_for_microxml/)
+//! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-222-yellow.svg)](https://github.com/bestia-dev/reader_for_microxml/)
+//! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-287-orange.svg)](https://github.com/bestia-dev/reader_for_microxml/)
 //!
 //!
 //!
@@ -121,9 +121,9 @@
 //!
 //! ## used in projects
 //!
-//! <https://github.com/LucianoBestia/cargo_crev_web>  
-//! <https://github.com/LucianoBestia/dodrio_templating>  
-//! <https://github.com/LucianoBestia/mem6_game>  
+//! <https://github.com/bestia-dev/cargo_crev_web>  
+//! <https://github.com/bestia-dev/dodrio_templating>  
+//! <https://github.com/bestia-dev/mem6_game>  
 //!
 //! ## cargo crev reviews and advisory
 //!
