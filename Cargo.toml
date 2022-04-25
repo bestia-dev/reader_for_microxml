@@ -2,6 +2,7 @@
 name = "reader_for_microxml"
 version = "2.0.2"
 authors = ["bestia.dev"]
+homepage = "https://bestia.dev"
 edition = "2018"
 description = "reader for microXml - the simplified subset of xml"
 repository = "https://github.com/bestia-dev/reader_for_microxml"
