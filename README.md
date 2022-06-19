@@ -26,7 +26,8 @@
 
 [comment]: # (lmake_lines_of_code end)
 
-Hashtags: #rustlang 
+Hashtags: #rustlang #tutorial  
+My projects on Github are more like a tutorial than a finished product: [bestia-dev tutorials](https://github.com/bestia-dev/tutorials_rust_wasm).
 
 There are many xml parsers/readers/tokenizers/lexers around, but I need something very small and simple for my simple html templates in wasm.\
 I found the existence of a standard (or W3C proposal) for *MicroXml* - dramatically simpler then the full Xml standard. Perfect for my use-case: I have small simple html files, that are microXml compatible.  
