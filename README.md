@@ -15,7 +15,7 @@
  [![RustActions](https://github.com/bestia-dev/reader_for_microxml/workflows/rust/badge.svg)](https://github.com/bestia-dev/reader_for_microxml/)
  [![latest doc](https://img.shields.io/badge/latest_docs-GitHub-orange.svg)](https://bestia-dev.github.io/reader_for_microxml/reader_for_microxml/index.html)
  [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bestia-dev/reader_for_microxml/blob/main/LICENSE)
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fbestia-dev%2Freader_for_microxml&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
+![Hits](https://bestia.dev/webpage_hit_counter/get_svg_image/717329939)]
 
 [comment]: # (lmake_lines_of_code start)
 [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-278-green.svg)](https://github.com/bestia-dev/reader_for_microxml/)
