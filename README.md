@@ -1,32 +1,34 @@
-[comment]: # (lmake_md_to_doc_comments segment start A)
+[//]: # (auto_md_to_doc_comments segment start A)
 
 # reader for microXml
 
-[comment]: # (lmake_cargo_toml_to_md start)
+[//]: # (auto_cargo_toml_to_md start)
 
 **reader for microXml - the simplified subset of xml**  
 ***version: 2.0.2  date: 2021-01-13 author: [bestia.dev](https://bestia.dev) repository: [GitHub](https://github.com/bestia-dev/reader_for_microxml)***  
 
-[comment]: # (lmake_cargo_toml_to_md end)
+[//]: # (auto_cargo_toml_to_md end)
 
-![status](https://img.shields.io/badge/maintained-green) 
-![status](https://img.shields.io/badge/ready_for_use-green) 
-[![crates.io](https://img.shields.io/crates/v/reader_for_microxml.svg)](https://crates.io/crates/reader_for_microxml) 
-[![Documentation](https://docs.rs/reader_for_microxml/badge.svg)](https://docs.rs/reader_for_microxml/) 
-[![crev reviews](https://web.crev.dev/rust-reviews/badge/crev_count/reader_for_microxml.svg)](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/) 
-[![RustActions](https://github.com/bestia-dev/reader_for_microxml/workflows/rust/badge.svg)](https://github.com/bestia-dev/reader_for_microxml/) 
-[![latest doc](https://img.shields.io/badge/latest_docs-GitHub-orange.svg)](https://bestia-dev.github.io/reader_for_microxml/reader_for_microxml/index.html) 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bestia-dev/reader_for_microxml/blob/main/LICENSE) 
-![Hits](https://bestia.dev/webpage_hit_counter/get_svg_image/717329939.svg) 
+ ![maintained](https://img.shields.io/badge/maintained-green)
+ ![ready_for_use](https://img.shields.io/badge/ready_for_use-green)
 
-[comment]: # (lmake_lines_of_code start)
+ [![crates.io](https://img.shields.io/crates/v/reader_for_microxml.svg)](https://crates.io/crates/reader_for_microxml)
+ [![Documentation](https://docs.rs/reader_for_microxml/badge.svg)](https://docs.rs/reader_for_microxml/)
+ [![crev reviews](https://web.crev.dev/rust-reviews/badge/crev_count/reader_for_microxml.svg)](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/)
+ [![RustActions](https://github.com/bestia-dev/reader_for_microxml/workflows/rust/badge.svg)](https://github.com/bestia-dev/reader_for_microxml/)
+ 
+ [![latest doc](https://img.shields.io/badge/latest_docs-GitHub-orange.svg)](https://bestia-dev.github.io/reader_for_microxml/reader_for_microxml/index.html)
+ [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bestia-dev/reader_for_microxml/blob/main/LICENSE)
+ ![reader_for_microxml](https://bestia.dev/webpage_hit_counter/get_svg_image/717329939.svg)
+
+[//]: # (auto_lines_of_code start)
 [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-278-green.svg)](https://github.com/bestia-dev/reader_for_microxml/)
 [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-208-blue.svg)](https://github.com/bestia-dev/reader_for_microxml/)
 [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-64-purple.svg)](https://github.com/bestia-dev/reader_for_microxml/)
 [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-222-yellow.svg)](https://github.com/bestia-dev/reader_for_microxml/)
 [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-287-orange.svg)](https://github.com/bestia-dev/reader_for_microxml/)
 
-[comment]: # (lmake_lines_of_code end)
+[//]: # (auto_lines_of_code end)
 
 Hashtags: #rustlang #tutorial  
 My projects on Github are more like a tutorial than a finished product: [bestia-dev tutorials](https://github.com/bestia-dev/tutorials_rust_wasm).
@@ -181,4 +183,4 @@ So I can drink a free beer for your health :-)
 [//bestiadev.substack.com](https://bestiadev.substack.com)  
 [//youtube.com/@bestia-dev-tutorials](https://youtube.com/@bestia-dev-tutorials)  
 
-[comment]: # (lmake_md_to_doc_comments segment end A)
+[//]: # (auto_md_to_doc_comments segment end A)
