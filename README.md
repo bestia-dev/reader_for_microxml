@@ -15,7 +15,7 @@
  [![crates.io](https://img.shields.io/crates/v/reader_for_microxml.svg)](https://crates.io/crates/reader_for_microxml)
  [![Documentation](https://docs.rs/reader_for_microxml/badge.svg)](https://docs.rs/reader_for_microxml/)
  [![crev reviews](https://web.crev.dev/rust-reviews/badge/crev_count/reader_for_microxml.svg)](https://web.crev.dev/rust-reviews/crate/reader_for_microxml/)
- [![RustActions](https://github.com/bestia-dev/reader_for_microxml/workflows/rust/badge.svg)](https://github.com/bestia-dev/reader_for_microxml/)
+ [![rust_fmt_auto_build_tests](https://github.com/bestia-dev/reader_for_microxml/workflows/rust/badge.svg)](https://github.com/bestia-dev/reader_for_microxml/)
  
  [![latest doc](https://img.shields.io/badge/latest_docs-GitHub-orange.svg)](https://bestia-dev.github.io/reader_for_microxml/reader_for_microxml/index.html)
  [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bestia-dev/reader_for_microxml/blob/main/LICENSE)
